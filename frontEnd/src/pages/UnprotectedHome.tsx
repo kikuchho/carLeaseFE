@@ -1,16 +1,12 @@
-import { Navigate } from "react-router-dom";
-import { jwtDecode }  from "jwt-decode";
-import api from "../api";
-import {REFRESH_TOKEN, ACCESS_TOKEN } from "../constants"
 import { useEffect, useState } from "react";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import api from "../api";
+import { jwtDecode } from "jwt-decode";
+import Header from "../components/Header";
 
+function UnprotectedHome () {
 
-type ProtectedRouteProps = {
-    children: React.ReactNode;
-};
-
-
-function ProtetedRoute({ children }: ProtectedRouteProps) {
+    ///-------------start of authroization logic------------------///
     const [isAuthorized, setIsAuthorized] = useState<null | boolean>(null);
 
     useEffect(() => {
@@ -68,10 +64,23 @@ function ProtetedRoute({ children }: ProtectedRouteProps) {
         return <div> Loading... </div>
     }
 
-    //return isAuthorized ? children : <Navigate to={"/login"} />
-    return isAuthorized ? children : <Navigate to={"/login"} />
-    
+    ///--------------end of authroization logic------------------///
+
+    return <div>
+
+    <Header  isAuthorized = { isAuthorized }/>
+
+
+    { isAuthorized === true ? 
+        <div> 
+            
+        </div> 
+        : 
+        <div>  
+
+        </div> 
+    }
+
+    </div>
 }
-
-export default ProtetedRoute
-
+export default UnprotectedHome 
