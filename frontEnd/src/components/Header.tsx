@@ -4,32 +4,42 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { CiBookmark } from "react-icons/ci";
 import { useState } from "react";
 import "../styles/Header.css";
+import Dropdown from "./dropdown";
+import RiseUpMenu from "./RiseUpMenu";
+import { useNavigate } from "react-router-dom";
 
-function Header(isAuthorized: any) {
+function Header({ isAuthorized }: { isAuthorized: boolean }) {
 
     const [isClicked, setIsClicked] = useState(false);
-    const [isClicked2, setIsClicked2] = useState(false);
-    
+    const navigate = useNavigate()
 
+    
+    console.log("isAuthorized in header", isAuthorized)
+
+    // No need for isAuthorizedtest, use isAuthorized directly
         
     return(
         <div>
 
-            <div
-                className={`H-dropdown ${isClicked ? " height: 20rem;" : ""} `} >
-                <p>this is drop down</p>
-            </div>
-            
-            <div className="Header-container">
-            <div>
-                <img src={react_img} className="header-logo"  />
-            </div>
-            <div> <CiSearch /> </div>
-            <div> 
-                { isAuthorized === true ? <CiBookmark onClick={ ()=> { setIsClicked2(!isClicked2)} }/> : <></> }
-                <GiHamburgerMenu onClick={() => setIsClicked(!isClicked)} /> 
-            </div>
+            <div className="header-container">
+                <div>
+                    <img src={react_img} className="header-logo"  />
+                </div>
+                
+                <div className="r-header-menu"> 
+                    { isAuthorized ? <RiseUpMenu  /> : <button className="login-logo" onClick={() => navigate("/login") }> ログイン </button> }
+                    <div> <CiSearch size={"25px"}/> </div>
+                    <Dropdown /> 
+                </div>
+
+                
                
+            </div>
+            <div className="sub-header">
+                <div className="sub-header-item1"> トヨタのクルマ </div> 
+                <div className="sub-header-item1"> オーナーサポート </div> 
+                <div className="sub-header-item2">  |  </div>
+                <div className="sub-header-item1"> カーライフ </div> 
             </div>
         </div>
         

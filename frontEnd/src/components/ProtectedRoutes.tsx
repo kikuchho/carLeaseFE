@@ -10,11 +10,13 @@ type ProtectedRouteProps = {
 };
 
 
-function ProtetedRoute({ children }: ProtectedRouteProps) {
+function ProtetecdRoute({ children }: ProtectedRouteProps) {
     const [isAuthorized, setIsAuthorized] = useState<null | boolean>(null);
 
     useEffect(() => {
-        auth().catch( () => {setIsAuthorized(false)}  )
+        auth().catch( () => {setIsAuthorized(false)} )
+       
+     
     }, [])
 
 
@@ -68,10 +70,12 @@ function ProtetedRoute({ children }: ProtectedRouteProps) {
         return <div> Loading... </div>
     }
 
+    console.log("user is " + isAuthorized) 
+    
     //return isAuthorized ? children : <Navigate to={"/login"} />
     return isAuthorized ? children : <Navigate to={"/login"} />
     
 }
 
-export default ProtetedRoute
+export default ProtetecdRoute
 

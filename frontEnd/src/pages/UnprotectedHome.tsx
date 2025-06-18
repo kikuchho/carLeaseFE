@@ -11,6 +11,7 @@ function UnprotectedHome () {
 
     useEffect(() => {
         auth().catch( () => {setIsAuthorized(false)}  )
+        
     }, [])
 
 
@@ -64,12 +65,14 @@ function UnprotectedHome () {
         return <div> Loading... </div>
     }
 
+    console.log("user is " + isAuthorized)
+
     ///--------------end of authroization logic------------------///
 
     return <div>
 
     <Header  isAuthorized = { isAuthorized }/>
-
+    
 
     { isAuthorized === true ? 
         <div> 

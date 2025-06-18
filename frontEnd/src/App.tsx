@@ -7,7 +7,7 @@ import Register from './pages/Register'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import UnprotectedHome from './pages/unProtectedHome'
-import ProtetedRoute from './components/ProtectedRoutes'
+import ProtectedRoute from './components/ProtectedRoutes'
 
 function Logout() {
   localStorage.clear()
@@ -27,11 +27,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route 
-          path="/oldhome" 
+          path="/protectedhome" 
           element={
-            <ProtetedRoute>
+            <ProtectedRoute>
               <Home/>
-            </ProtetedRoute>
+            </ProtectedRoute>
           }    />
           <Route  path='/' element={<UnprotectedHome /> } />
           <Route  path='/logout' element={<Logout/>    }   />
