@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { CiBookmark } from "react-icons/ci";
+import { CiSearch } from "react-icons/ci";
+import { IoMdClose } from "react-icons/io";
 import "../styles/HeaderSearch.css";
 
 const HeaderSearch = () => { 
@@ -25,15 +26,22 @@ const HeaderSearch = () => {
 
     return(
     <div>
-        <div onClick={() => {setIsOpened(!isOpened); setIsAnimating(true);} } className="riseup-menu-button" > 
-            <CiBookmark size={"25px"}/> 
+        <div onClick={() => {setIsOpened(!isOpened); setIsAnimating(true);} } className="search-icon-button" > 
+            <CiSearch size={"25px"}/>
         </div>
         {isOpened || isAnimating ? 
-        <div className={`riseup-menu-content ${isOpened ? "rise-up open" : "fall-down"}`} ref={menuRef}>
-            <div className="riseup-menu-items">
+        <div className={`search-content ${isOpened ? "rise-up open" : "fall-down"}`} ref={menuRef}>
+            <div className="search-close-button">
+                <IoMdClose  onClick={() => {
+                    setIsOpened(false);
+                    setIsAnimating(true);
+                }} size={"25px"}/>
+            </div>
+            <div className="search-menu-items">
               <input type="text" placeholder="Search..." className="search-input" />
               <button className="search-button">Search</button>
             </div>
+            
         </div>
         : null
         }
