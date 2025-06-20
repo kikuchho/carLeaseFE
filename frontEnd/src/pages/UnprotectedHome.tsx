@@ -3,6 +3,12 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import api from "../api";
 import { jwtDecode } from "jwt-decode";
 import Header from "../components/Header";
+import CardSlider from "../components/CardSlider";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import React from "react";
+import "../styles/unProtectedHome.css";
 
 function UnprotectedHome () {
 
@@ -69,9 +75,19 @@ function UnprotectedHome () {
 
     ///--------------end of authroization logic------------------///
 
+    
+    api.get("/api/cars/")
+            .then((res) => { console.log("carList2", res.data); } )
+            .catch((err) => { alert(err) } )
+    
+   
     return <div>
 
     <Header  isAuthorized = { isAuthorized }/>
+    
+    
+    
+    <CardSlider />
     
 
     { isAuthorized === true ? 
@@ -87,3 +103,37 @@ function UnprotectedHome () {
     </div>
 }
 export default UnprotectedHome 
+
+
+// var settings = {
+    // dots: true,
+    // infinite: true,
+    // speed: 500,
+    // slidesToShow: 1,
+    // slidesToScroll: 1,
+    // };
+
+
+{/* <div className="card-container">
+        <Slider   {...settings}>
+        <div className="card">
+            <h3>1</h3>
+        </div>
+        <div>
+            <h3>2</h3>
+        </div>
+        <div>
+            <h3>3</h3>
+        </div>
+        <div>
+            <h3>4</h3>
+        </div>
+        <div>
+            <h3>5</h3>
+        </div>
+        <div>
+            <h3>6</h3>
+        </div>
+        </Slider>
+    </div>
+     */}

@@ -1,0 +1,22 @@
+.card-container {
+    height: 500px;
+    width: 500px;
+    background-color: aqua;
+}
+
+.card {
+    height: 500px;
+    width: 400px;
+}
+
+.slick-next:before {
+    height: 50px;
+    width: 50px;
+    background-color: black;
+}
+
+.slick-prev:before{
+    height: 50px;
+    width: 50px;
+    background-color: black;
+}

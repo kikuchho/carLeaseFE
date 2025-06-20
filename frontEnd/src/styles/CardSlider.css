@@ -1,0 +1,115 @@
+.slider-main-wrapper {
+    display: flex;
+   
+    align-items: center;
+    justify-content: center;
+}
+
+.price-sheet-container{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 50%;
+   
+}
+
+.price-sheets {
+    display: flex;
+    flex-direction: flex;
+    width: 70%;
+    padding: 20px;
+}
+
+.price-sheet-item1 {
+    width: 150px;
+}
+
+.price-sheet-item2 {
+    position: relative;
+    width: 300px;
+    top: 50%;
+    left: 0;
+}
+
+.slider-container {
+    width: 80%;
+    max-width: 1100px;
+    
+
+    /* Center both horizontally and vertically */
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+}
+
+.slider-container .slick-slider {
+    width: 140%; /* Increase width so that left/right items is half cut off*/
+    left: -20%; /* Push 10% of the slider off to the left */
+    position: relative;
+}
+
+.slider-item {
+    
+    background-color: transparent   ;
+    box-sizing: border-box;
+}
+
+.slider-img {
+    height: 60%;
+    width: 60%;
+    object-fit: contain;
+    display: block; /* Remove extra space */
+    margin: 0 auto; /* Center image */
+}
+
+.slick-slide {
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+
+.slick-list {
+    margin: 0 -5px; /* Compensate for slide padding */
+}
+
+
+.slick-next:before {
+    height: 50px;
+    width: 50px;
+    background-color: black;
+}
+
+.slick-prev:before{
+    height: 50px;
+    width: 50px;
+    background-color: black;
+}
+
+.custom-next-arrow {
+    right: 30.5%  !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 30px !important;
+    height: 30px !important;
+    z-index: 10;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000 !important;
+}
+
+.custom-prev-arrow {
+    left: 28% !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 30px !important;
+    height: 30px !important;
+    z-index: 10;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000 !important;
+}
