@@ -213,6 +213,19 @@ function CardSlider() {
         return <div className="slider-main-wrapper">Loading...</div>;
     }
 
+  //handler for line 230 - 240 
+  function currentSlideIndexHandler(index: number): number {
+
+    if(index === 3) {
+      return 0;
+    }
+    if(index === -1) {
+      return 2 ;
+    }
+    return index;
+  }
+
+
   return (
     <div className="slider-main-wrapper"> 
       <div className="slider-container">
@@ -221,10 +234,13 @@ function CardSlider() {
           {/* <CustomSlide index={paylist[currentSlideIndex + 1  ].id} />
           <CustomSlide index={paylist[currentSlideIndex - 1].id} /> 
           <CustomSlide index={paylist[currentSlideIndex  ].id} /> */}
+          <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex + 1)  ].id} />
+          <CustomSlide index={paylist[currentSlideIndex - 1].id} /> 
+          <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex) ].id} />
 
-          <CustomSlide index={paylist[(currentSlideIndex + 1) % 3].id} />
+          {/* <CustomSlide index={paylist[(currentSlideIndex + 1) % 3].id} />
           <CustomSlide index={paylist[(currentSlideIndex + 2) % 3].id} /> 
-          <CustomSlide index={paylist[currentSlideIndex % 3].id} />
+          <CustomSlide index={paylist[currentSlideIndex % 3].id} /> */}
  
         </Slider>
       </div>
