@@ -10,6 +10,7 @@ import "slick-carousel/slick/slick-theme.css";
 import React from "react";
 import "../styles/unProtectedHome.css";
 import FirstPoint from "../components/FirstPoint";
+import CardSlidertemp from "../components/CardSlidertemp";
 
 function UnprotectedHome () {
 
@@ -90,6 +91,7 @@ function UnprotectedHome () {
     
     <CardSlider />
     
+    <CardSlidertemp />
 
     { isAuthorized === true ? 
         <div> 

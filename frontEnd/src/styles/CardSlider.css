@@ -98,11 +98,8 @@
 }
 
 .slider-item.notcentered {
-    /* Add other styling you want for non-centered items */
-    opacity: 0.3;
+    opacity: 0.3; 
 }
-
-
 
 
 .slider-img {
@@ -116,7 +113,11 @@
 .slick-slide {
     padding: 0 2px;
     box-sizing: border-box;
+    
 }
+
+
+
 
 .slick-list {
     margin: 0 -2px; /* Compensate for slide padding */
@@ -160,3 +161,7 @@
     justify-content: center;
     z-index: 1000 !important;
 }
+
+
+
+

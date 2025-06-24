@@ -1,0 +1,15 @@
+.slick-slide {
+  
+  opacity: 0.3;
+}
+
+.slick-slide.slick-current { /* または .slick-slide.slick-active */
+  opacity: 0.3;
+}
+
+.slick-slide.slick-active.slick-center.slick-current {
+  opacity: 1;
+}
+.slick-slide.slick-active {
+  opacity: 0.3; 
+}

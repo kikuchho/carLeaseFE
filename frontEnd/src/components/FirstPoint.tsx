@@ -15,6 +15,17 @@ const FirstPoint = () => {
             </div>
            
             <img src={logo} alt={logo} className="logo-image" />
+            <div className='logotext2Container'>
+                <div className="logo-text2"> 任意保険・税金コミ</div>
+                <div className='logo-text2'> 選べる2つのプラン  </div>
+                <div className='logo-text2'> WEB申込み  </div>
+            </div>
+            <div className='logotext3Container'>
+                <div className=''> 車両本体価格と合わせクルマを維持するのに必要な諸費用をコミコミにして、 </div>
+                <div className=''> 月々定額でお支払いいただく、 </div>
+                <div className=''> クルマの新しいサブスクリプションです。 </div>
+            </div>
+    
         </div >
 
     </div>
