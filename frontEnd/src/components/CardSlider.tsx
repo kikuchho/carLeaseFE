@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useState } from "react";
+import React, { lazy, use, useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -11,17 +11,7 @@ import arrowleft from "../assets/arrowleft.svg";
 import arrowright from "../assets/arrowright.svg";
 
 
-type Car = {
-    id: number;
-    name: string;
-    price: number;
-    grade: string;
-    imgname: string;
-    paylist1: number;
-    paylist2: number;
-    paylist3: number;
-    paylist4: number;
-}
+
 
 type Paylist = {
     id: number;
@@ -51,7 +41,14 @@ function CardSlider() {
 
     // State to track if it's the first change in currentSlideIndex
     const [firstchange, setFirstChange] = useState<boolean>(true);
+    const firstRef = React.useRef<boolean>(true);
 
+    // State to track the target slide index for animations
+    const [isanimating, setIsAnimating] = useState<boolean>(false);
+
+   // Create a non-state variable to track animation without causing re-renders
+    const animationRef = React.useRef<boolean>(false);
+    const nextslideRef = React.useRef<number>(0);
 
     // Logging whenever currentSlideIndex changes
     useEffect(() => {
@@ -123,29 +120,88 @@ function CardSlider() {
     
     //----------------------end of get car list--------------------///
 
-    const carImages: { [key: number]: string } = {
-      1: raize,
-      2: yaris,
-      3: noah
-    };
+    
 
     function CustomSlide({ index }: { index: number }) {
     
-    const imageSource = carImages[index] || noah; // Fallback to noah if not found
-    return (
-        <div className="slider-item">
-            <img className="slider-img" src={imageSource} alt={`Slide ${index}`} />
-        </div>
-    );
+    // Find the car in paylist that matches the index
+    const car = paylist.find(car => car.id === index);
+    
+    // Create a mapping from image names to imported image variables
+    const imageMap: { [key: string]: string } = {
+        "noah": noah,
+        "raize": raize,
+        "yaris": yaris
+    };
+
+  
+    // Get image based on car imgname or fallback to noah
+    let imageSource = noah;
+    if (car?.imgname) {
+        const imgName = car.imgname.toString().toLowerCase();
+        imageSource = imageMap[imgName] || noah;
     }
+
+   
+    // Check if this slide is centered or becoming centered
+    //const isCurrentCentered = currentSlideIndex === index;
+    // const isCurrentCentered = animationRef.current === index;
+    // const isCentered = isCurrentCentered || isanimating;
+
+    const isCurrentCentered = currentSlideIndex === index;
+    const isAnimating = animationRef.current;
+    const nextslide = nextslideRef.current;
+    
+
+    return (
+    
+    <div>
+      { isAnimating ? 
+        <div className={`slider-item  ${ index === 2 ? "" : "notcentered"} `}   >
+            <img className="slider-img" src={imageSource} alt={`Slide ${index}`} />
+            <div> {paylist[index - 1].name}  </div>
+            <div> {paylist[index - 1].grade}  </div>
+        </div> : 
+
+        <div className={`slider-item  ${ isCurrentCentered  ? "" : "notcentered"} `}   >
+            <img className="slider-img" src={imageSource} alt={`Slide ${index}`} />
+            <div> {paylist[index - 1].name}  </div>
+            <div> {paylist[index - 1].grade}  </div>
+        </div> 
+
+      }
+    </div>
+      
+        
+    );
+  }
+
+    //----------------------slick arrow on click--------------------///
+    const clickref = React.useRef<HTMLDivElement>(null);
+    // Create a handler that updates target slide immediately
+    const handleClick = () => {
+      
+
+      //setIsAnimating(!isanimating);
+      console.log("test1111111111111111111111111111"+ isanimating);
+    };
+
+    useEffect(() => {
+      clickref.current?.addEventListener("click", handleClick);
+    },[]);
+  
 
     //----------------------slick-arrow-functions--------------------///
 
+    
+
     function SampleNextArrow(props :any) {
       const { className, style, onClick } = props;
+
+      
       return (
         
-        <div>
+        <div >
           <div 
             className={`${className} custom-next-arrow`}
             style={{ ...style,  display: "block", visibility: "hidden"  , zIndex: 1,right: "-25px" }}
@@ -182,8 +238,43 @@ function CardSlider() {
     slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
+  
+    beforeChange: (currentSlide: number, nextSlide: number) => {
+
+      // Set animation flag but DON'T update state
+      animationRef.current = true;
+      nextslideRef.current = nextSlide; // Store the target slide index for animation
+      console.log("Animation starting", currentSlide, "to", nextSlide, "animationRef:", animationRef.current);
+      
+      // animationRef.current = nextSlide; // Store the target slide index for animation
+      // console.log("Animation starting", currentSlide, "to", nextSlide, "animationRef:", animationRef.current);
+      // if(firstRef.current === true) {
+      //     //setCurrentSlideIndex(nextSlide + 1);
+      //     animationRef.current = nextSlide + 1
+      //     //setFirstChange(false);
+      //     firstRef.current = false;
+      //     console.log("in firstchange Current car index!!!!!!!!!!!!!!!!!!!!!!:",  nextSlide);
+      //   }else{
+      //     if(nextSlide === 3) {
+      //         //setCurrentSlideIndex(0);
+      //         animationRef.current = 0;
+      //     }else{
+      //           //setCurrentSlideIndex(nextSlide + 1);
+      //           animationRef.current = nextSlide + 1;
+      //     }
+
+        
+      //   }
+     
+      // console.log("in afterchange Current car index:",  nextSlide);
+      // fetchPaylist();
+    },
     afterChange: (current: number) => {
-      // This function runs after slide changes
+      //This function runs after slide changes
+      // Reset animation flag
+      animationRef.current = false;
+      console.log("Animation ended, current slide index:", current, "animationRef:", animationRef.current);
+
         if(firstchange === true) {
           setCurrentSlideIndex(current + 1);
           setFirstChange(false);
@@ -197,14 +288,9 @@ function CardSlider() {
 
         
         }
-        
-        
-        
-        fetchPaylist();
-        
+     
       console.log("in afterchange Current car index:",  current);
       fetchPaylist();
-
     }
   };
 
@@ -213,77 +299,63 @@ function CardSlider() {
         return <div className="slider-main-wrapper">Loading...</div>;
     }
 
-  //handler for line 230 - 240 
-  function currentSlideIndexHandler(index: number): number {
-
-    if(index === 3) {
-      return 0;
-    }
-    if(index === -1) {
-      return 2 ;
-    }
-    return index;
-  }
-
-
+  
   return (
-    <div className="slider-main-wrapper"> 
-      <div className="slider-container">
-        <Slider {...settings}>
-        
-          {/* <CustomSlide index={paylist[currentSlideIndex + 1  ].id} />
-          <CustomSlide index={paylist[currentSlideIndex - 1].id} /> 
-          <CustomSlide index={paylist[currentSlideIndex  ].id} /> */}
-          <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex + 1)  ].id} />
-          <CustomSlide index={paylist[currentSlideIndex - 1].id} /> 
-          <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex) ].id} />
+    <div className="master-container">
+       <div className="slider-main-wrapper"> 
+        <div className="slider-container">
+          <Slider {...settings}>
+            
+            <CustomSlide index={3} />
+            <CustomSlide index={1} /> 
+            <CustomSlide index={2} />
+            {/* <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex + 1)  ].id} />
+            <CustomSlide index={paylist[currentSlideIndex - 1].id} /> 
+            <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex) ].id} /> */}
 
-          {/* <CustomSlide index={paylist[(currentSlideIndex + 1) % 3].id} />
-          <CustomSlide index={paylist[(currentSlideIndex + 2) % 3].id} /> 
-          <CustomSlide index={paylist[currentSlideIndex % 3].id} /> */}
- 
-        </Slider>
-      </div>
+            {/* <CustomSlide index={paylist[(currentSlideIndex + 1) % 3].id} />
+            <CustomSlide index={paylist[(currentSlideIndex + 2) % 3].id} /> 
+            <CustomSlide index={paylist[currentSlideIndex % 3].id} /> */}
+  
+          </Slider>
+        </div>
 
       <div className="price-sheet-container">
+        <div className="border-top-line">  </div>
         <div className="price-sheets">
           <div className="price-sheet-item1">
             <div>ボーナス月 </div>
             <div>なしの場合 </div>
           </div>
           <div className="price-sheet-item2">
-            <div> 月額  {`¥ ${paylist[currentSlideIndex - 1]?.paylist1 }`}</div> 
+            <div> 月額  <span className="price-number"> {paylist[currentSlideIndex - 1]?.paylist1}</span> 円 (税込み) ~</div> 
           </div>
         </div>
         <div className="price-sheets">
           <div className="price-sheet-item1">
             <div>ボーナス月 </div>
-            <div>なしの場合 </div>
+            <div>55,000円 (税込み) の場合</div>
           </div>
           <div className="price-sheet-item2">
-            <div> 月額  {`¥ ${paylist[currentSlideIndex - 1]?.paylist2}`} 円 (税込み)</div> 
+            <div> 月額  <span className="price-number"> {paylist[currentSlideIndex - 1]?.paylist2}</span> 円 (税込み) ~ </div> 
           </div >
         </div>
         <div className="price-sheets">
           <div className="price-sheet-item1">
             <div>ボーナス月 </div>
-            <div>なしの場合 </div>
+            <div>110,000円 (税込み) の場合 </div>
           </div>
           <div className="price-sheet-item2">
-            <div> 月額  {`¥ ${paylist[currentSlideIndex -  1]?.paylist3}`}</div> 
+            <div> 月額  <span className="price-number"> {paylist[currentSlideIndex - 1]?.paylist3}</span> 円 (税込み) ~</div> 
           </div>
         </div>
       </div>
 
 
-
-
-
     </div>
+    </div>
+   
     
-
-
-
   );
 }
 

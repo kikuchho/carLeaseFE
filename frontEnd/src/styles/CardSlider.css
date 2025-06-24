@@ -1,9 +1,20 @@
+.master-container {
+    position: absolute;
+    margin-top: 110rem;
+    width: 100%;
+    height: 100%;
+
+}
+
+
 .slider-main-wrapper {
     display: flex;
-   
+    
     align-items: center;
     justify-content: center;
 }
+
+
 
 .price-sheet-container{
     position: absolute;
@@ -11,30 +22,52 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    top: 50%;
-   
+    top: 55%;
+    
 }
 
+.border-top-line {
+    border-bottom: 1px solid #000000;
+    width: 88%;
+    height: 5px;
+}
 .price-sheets {
     display: flex;
     flex-direction: flex;
-    width: 70%;
-    padding: 20px;
+    width: 90%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid #000000;
 }
 
 .price-sheet-item1 {
-    width: 150px;
+    width: 180px;
+    font-size: 14px;
+    font-weight: 600;
+    left: -10px;
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
 }
 
 .price-sheet-item2 {
     position: relative;
     width: 300px;
-    top: 50%;
-    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.price-number {
+  font-size: 30px; /* Adjust size as needed */
+  font-weight: bold;
+  color: #4f2ad3; /* Change color as needed */
 }
 
 .slider-container {
-    width: 80%;
+    width: 70%;
     max-width: 1100px;
     
 
@@ -56,23 +89,37 @@
     
     background-color: transparent   ;
     box-sizing: border-box;
+    
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  
 }
 
+.slider-item.notcentered {
+    /* Add other styling you want for non-centered items */
+    opacity: 0.3;
+}
+
+
+
+
 .slider-img {
-    height: 60%;
-    width: 60%;
+    height: 50%;
+    width: 50%;
     object-fit: contain;
     display: block; /* Remove extra space */
     margin: 0 auto; /* Center image */
 }
 
 .slick-slide {
-    padding: 0 5px;
+    padding: 0 2px;
     box-sizing: border-box;
 }
 
 .slick-list {
-    margin: 0 -5px; /* Compensate for slide padding */
+    margin: 0 -2px; /* Compensate for slide padding */
 }
 
 

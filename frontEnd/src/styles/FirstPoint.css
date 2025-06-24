@@ -1,0 +1,56 @@
+.FirstPointContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  overflow: hidden;
+}
+
+.image-container {
+    width: 110%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    flex-direction: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    translate:  -5%;
+    
+}
+
+.logoContainer {
+    padding-top: 5rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-image {
+  width: 35%;
+  height: auto; /* Better to use auto for height to maintain aspect ratio */
+  display: block;
+  margin: 0 auto;
+}
+
+.logo-text {
+    text-align: center;
+    margin: 5px 0;
+    font-size: 150%;
+    width: 100%; /* Match the logo-image width */
+    margin: 0 auto; /* Center the text just like the image */
+    display: block;
+}
+
+.logotextContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
