@@ -1,8 +1,9 @@
 .header-logo{
     padding: 10px;
     width: 3rem;
-    height: 3rem;
+    height: auto;
     margin-left: 10px;
+
 }
 
 .header-container{
@@ -20,8 +21,9 @@
     display: flex;
     justify-content: flex-end;
     margin-right: 10px;
-    gap: 10px;
-
+    gap: 15px;
+    position: relative;
+    right: 5%;
 }
 
 
@@ -67,5 +69,24 @@
     height: 0rem; 
     background-color: brown;
     transition: height 300ms;
+
+}
+
+.login-logo {
+    width: 4rem;
+    height: 2rem;
+    
+    cursor: pointer;
+    display: flex;                /* Add flexbox */
+    align-items: center;          /* Vertically center text */
+    justify-content: center; 
+    background-color: transparent;
+}
+
+.login-logo:hover {
+    background-color: #a0a0a0; /* Change color on hover */
+}
+
+.login-text{
 
 }

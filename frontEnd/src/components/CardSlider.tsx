@@ -9,7 +9,7 @@ import raize from "../assets/raize.png";
 import yaris from "../assets/yaris.png";
 import arrowleft from "../assets/arrowleft.svg";
 import arrowright from "../assets/arrowright.svg";
-
+import ico_link_arrow from "../assets/icon_arrow.png";
 
 
 
@@ -157,7 +157,7 @@ function CardSlider() {
     
     <div>
        
-
+        
         <div className={`slider-item  ${ isCurrentCentered  ? "" : "notcentered"} `}   >
         {/* <div className={`slider-item `} > */}
             <img className="slider-img" src={imageSource} alt={`Slide ${index}`} />
@@ -298,60 +298,83 @@ function CardSlider() {
 
   
   return (
-    <div className="master-container">
-       <div className="slider-main-wrapper"> 
-        <div className="slider-container">
-          <Slider {...settings}>
+    <div>
+        <div className="master-container">
+        <div className="title_header"> 
+          <div className="slidertitle1"> トヨタの人気車種が勢ぞろい </div>
+          <div className="slidertitle2"> 例えば人気車種が月々この金額で！ </div>
+        </div>
+        
+        
+        <div className="slider-main-wrapper"> 
+          <div className="slider-container">
+            <Slider {...settings}>
+              
+              <CustomSlide index={3} />
+              <CustomSlide index={1} /> 
+              <CustomSlide index={2} />
+              {/* <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex + 1)  ].id} />
+              <CustomSlide index={paylist[currentSlideIndex - 1].id} /> 
+              <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex) ].id} /> */}
+
+              {/* <CustomSlide index={paylist[(currentSlideIndex + 1) % 3].id} />
+              <CustomSlide index={paylist[(currentSlideIndex + 2) % 3].id} /> 
+              <CustomSlide index={paylist[currentSlideIndex % 3].id} /> */}
+    
+            </Slider>
+          </div>
+
+          <div className="price-sheet-container">
+            <div className="border-top-line">  </div>
+
+            <div className="price-sheets">
+              <div className="price-sheet-item1">
+                <div>ボーナス月 </div>
+                <div>なしの場合 </div>
+              </div>
+              <div className="price-sheet-item2">
+                <div> 月額  <span className="price-number"> {paylist[currentSlideIndex - 1]?.paylist1}</span> 円 (税込み) ~</div> 
+              </div>
+            </div>
+            <div className="price-sheets">
+              <div className="price-sheet-item1">
+                <div>ボーナス月 </div>
+                <div>55,000円 (税込み) の場合</div>
+              </div>
+              <div className="price-sheet-item2">
+                <div> 月額  <span className="price-number"> {paylist[currentSlideIndex - 1]?.paylist2}</span> 円 (税込み) ~ </div> 
+              </div >
+            </div>
+            <div className="price-sheets">
+              <div className="price-sheet-item1">
+                <div>ボーナス月 </div>
+                <div>110,000円 (税込み) の場合 </div>
+              </div>
+              <div className="price-sheet-item2">
+                <div> 月額  <span className="price-number"> {paylist[currentSlideIndex - 1]?.paylist3}</span> 円 (税込み) ~</div> 
+              </div>
+            </div>
+          </div>
+          
+
+          
+        </div>
+          <div className="buttombuttoncontainer">    
+            <div className="buttombutton"> <p className="buttonbuttomTXT">一括払い、ローンとKINTOを比較する </p> <img src={ico_link_arrow} className="buttonbuttomimg" /> </div> 
+            <div className="buttombutton"> <p className="buttonbuttomTXT">この車種をKINTOでWEB見積り </p> <img src={ico_link_arrow} className="buttonbuttomimg" /> </div>      
             
-            <CustomSlide index={3} />
-            <CustomSlide index={1} /> 
-            <CustomSlide index={2} />
-            {/* <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex + 1)  ].id} />
-            <CustomSlide index={paylist[currentSlideIndex - 1].id} /> 
-            <CustomSlide index={paylist[currentSlideIndexHandler(currentSlideIndex) ].id} /> */}
-
-            {/* <CustomSlide index={paylist[(currentSlideIndex + 1) % 3].id} />
-            <CustomSlide index={paylist[(currentSlideIndex + 2) % 3].id} /> 
-            <CustomSlide index={paylist[currentSlideIndex % 3].id} /> */}
-  
-          </Slider>
-        </div>
-
-      <div className="price-sheet-container">
-        <div className="border-top-line">  </div>
-        <div className="price-sheets">
-          <div className="price-sheet-item1">
-            <div>ボーナス月 </div>
-            <div>なしの場合 </div>
           </div>
-          <div className="price-sheet-item2">
-            <div> 月額  <span className="price-number"> {paylist[currentSlideIndex - 1]?.paylist1}</span> 円 (税込み) ~</div> 
-          </div>
-        </div>
-        <div className="price-sheets">
-          <div className="price-sheet-item1">
-            <div>ボーナス月 </div>
-            <div>55,000円 (税込み) の場合</div>
-          </div>
-          <div className="price-sheet-item2">
-            <div> 月額  <span className="price-number"> {paylist[currentSlideIndex - 1]?.paylist2}</span> 円 (税込み) ~ </div> 
-          </div >
-        </div>
-        <div className="price-sheets">
-          <div className="price-sheet-item1">
-            <div>ボーナス月 </div>
-            <div>110,000円 (税込み) の場合 </div>
-          </div>
-          <div className="price-sheet-item2">
-            <div> 月額  <span className="price-number"> {paylist[currentSlideIndex - 1]?.paylist3}</span> 円 (税込み) ~</div> 
-          </div>
-        </div>
       </div>
 
+      <div className="FirstPointContainer3">
+        <div className='bottomText1'> 契約満了時は </div>
+        <div className='bottomText1'>「乗り換え」  「再契約」  「ご返却」の３つから選択！ </div>
+        <div className='bottomText2'> 契約満了時は、KINTOで新たなクルマをご契約いただくことも、</div>
+        <div className='bottomText2'> 今のおクルマを再契約いただくことも、そのままご返却いただくこともできます。 </div>
+      </div>
 
     </div>
-    </div>
-   
+    
     
   );
 }

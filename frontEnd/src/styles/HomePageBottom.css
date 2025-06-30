@@ -1,0 +1,31 @@
+.home-page-bottom-container{
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #eaf3f5
+    
+}
+
+.fifthpoint-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.titleimg {
+    width: 20px;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: flex;
+    align-items: center;
+    justify-content: center;
+}

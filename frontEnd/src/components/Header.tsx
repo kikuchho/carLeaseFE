@@ -1,4 +1,5 @@
-import react_img from "../assets/react.svg"
+import Toyota_logo from "../assets/Toyota-logo.png";
+
 import { CiSearch } from "react-icons/ci";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CiBookmark } from "react-icons/ci";
@@ -24,11 +25,11 @@ function Header({ isAuthorized }: { isAuthorized: boolean }) {
 
             <div className="header-container">
                 <div>
-                    <img src={react_img} className="header-logo"  />
+                    <img src={Toyota_logo} className="header-logo"  />
                 </div>
                 
                 <div className="r-header-menu"> 
-                    { isAuthorized ? <RiseUpMenu  /> : <button className="login-logo" onClick={() => navigate("/login") }> ログイン </button> }
+                    { isAuthorized ? <RiseUpMenu  /> : <div className="login-logo" onClick={() => navigate("/login") }> <div className="login-text">ログイン</div> </div> }
                     <div> <HeaderSearch /> </div>
                     <Dropdown /> 
                 </div>

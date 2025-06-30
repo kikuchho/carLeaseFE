@@ -1,0 +1,172 @@
+.ThirdPointMasterContainer {
+    position: relative;
+    width: 100%;
+    height: 1700px;
+    
+}
+
+
+.ThirdPointContainer {
+    position: relative;
+    margin-top: 30px;
+    height: 700px;
+
+    border-top: 1px solid #000000;
+}
+
+
+.image-container3 {
+    position: relative;
+    width: 6rem;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    
+}
+
+.title1-container {
+    height: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-4rem);
+}
+
+.title1 {
+    position: absolute;
+    font-size: 3rem;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.title1-2 {
+     position: absolute;
+    font-size: 3rem;
+    font-weight: bolder;
+    text-align: center;
+    transform: translateY(3rem);
+}
+
+
+.pt3info-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.pt3info {
+    width: 700px;
+    height: auto;
+    margin: 2rem auto 0 auto; 
+}
+
+.bottombutton-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.bottombutton {
+    position: relative;
+    width: 330px;
+    height: 70px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #000000;
+    padding-left: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.bottombutton:hover {
+    background-color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0px 5px 0px red;
+    color: #ff0000;
+}
+
+.bottombuttonimg {
+    width: 20px;
+    height: auto;
+    object-fit: contain;
+    display: block; 
+    position: relative;
+    padding-right: 10px ;
+}
+
+.bottombuttonTXT{
+    margin-left: 10px;
+    font-weight: 700;
+    text-align: center;
+    font-size: 16px;
+}
+
+.bottomTXT1{
+    font-weight: 700;
+    text-align: center;
+    font-size: 18px;
+    margin-top: 22px;
+}
+
+.bottomTXT2 {
+    font-weight: 600;
+    text-align: center;
+    font-size: 26px;
+}
+
+.btmsub1 {
+    font-weight: lighter;
+    font-size: 20px;
+}
+
+.btmsub2 {
+    color: rgb(104, 104, 255);
+}
+
+.yellow-underline {
+    position: relative;
+    height: 1.5rem;
+    width: auto;
+    display: inline-block;
+    border-bottom: 8px solid #ffe066; /* yellow */
+  font-weight: bold;
+}
+
+.FourthPointContainer {
+    height: 700px;
+}
+
+.FourthPointContainerbg {
+    position: relative;
+    margin-top: 30px;
+    
+    border-top: 1px solid #000000;
+}
+
+.image-container4 {
+    position: relative;
+    width: 70%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.pt4info-container {
+    position: relative;
+    display: flex;
+    flex-direction: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 600px;
+    background-color: #eaf3f5;
+}

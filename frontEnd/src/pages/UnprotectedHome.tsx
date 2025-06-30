@@ -11,6 +11,8 @@ import React from "react";
 import "../styles/unProtectedHome.css";
 import FirstPoint from "../components/FirstPoint";
 import CardSlidertemp from "../components/CardSlidertemp";
+import ThirdPoint from "../components/mainpage/Thirdpoint";
+import HomePageBottom from "../components/mainpage/HomePageBottom";
 
 function UnprotectedHome () {
 
@@ -83,27 +85,38 @@ function UnprotectedHome () {
             .catch((err) => { alert(err) } )
     
    
-    return <div>
+    return(
+    <div className="unProtectedHomeContainer">
 
-    <Header  isAuthorized = { isAuthorized }/>
-    
-    <FirstPoint />
-    
-    <CardSlider />
-    
-    <CardSlidertemp />
+        <Header  isAuthorized = { isAuthorized }/>
 
-    { isAuthorized === true ? 
-        <div> 
+        <FirstPoint />
+
+        <div className="below-header-container">
+           
+        
+            <CardSlider />
             
-        </div> 
-        : 
-        <div>  
+            <ThirdPoint />
 
-        </div> 
-    }
+        </div>
+
+        <HomePageBottom /> 
+        
+       
+        { isAuthorized === true ? 
+            <div> 
+                
+            </div> 
+            : 
+            <div>  
+
+            </div> 
+        }
 
     </div>
+    )
+   
 }
 export default UnprotectedHome 
 

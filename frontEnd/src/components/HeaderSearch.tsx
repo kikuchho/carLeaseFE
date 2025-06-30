@@ -22,6 +22,17 @@ const HeaderSearch = () => {
     
     
     }, [])
+
+    useEffect(() => {
+        if (isOpened) {
+            document.body.style.overflow = 'hidden'; // Disable scrolling
+        } else {
+            // Only enable scrolling after animation is complete
+          
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
+            
+        }
+    }, [isOpened, isAnimating]);
     
 
     return(
@@ -38,8 +49,8 @@ const HeaderSearch = () => {
                 }} size={"25px"}/>
             </div>
             <div className="search-menu-items">
-              <input type="text" placeholder="Search..." className="search-input" />
-              <button className="search-button">Search</button>
+              <input type="text" placeholder="どんなことを知りたいですか" className="search-input" />
+              <div className="search-button"><CiSearch size={"26px"}/></div>
             </div>
             
         </div>
