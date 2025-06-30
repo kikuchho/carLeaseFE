@@ -29,3 +29,40 @@
     align-items: center;
     justify-content: center;
 }
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+        "item1 item2 item3"
+        "item4 item4-middle item5";
+    gap: 10px;
+    padding: 20px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* First row items remain default */
+
+/* Second row items */
+.grid-item:nth-child(4) {
+    grid-area: item4;
+    justify-self: end;
+}
+
+.grid-item:nth-child(5) {
+    grid-area: item5;
+    justify-self: start;
+}
+
+/* Empty middle space in row 2 */
+.grid-item-middle {
+    grid-area: item4-middle;
+}
+
+.grid-img {
+    width: 190px;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
