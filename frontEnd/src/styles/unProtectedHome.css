@@ -1,7 +1,14 @@
 
+.Home-contentsdrawer-container{
+   overflow: hidden;
+}
+
+
 .unProtectedHomeContainer {
-    min-width: 700px;
+    min-width: 1000px;
    height: 6600px;
+   position: absolute;
+   overflow: hidden;
 }
 
 .below-header-container {

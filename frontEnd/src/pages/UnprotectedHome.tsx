@@ -13,6 +13,7 @@ import FirstPoint from "../components/FirstPoint";
 import CardSlidertemp from "../components/CardSlidertemp";
 import ThirdPoint from "../components/mainpage/Thirdpoint";
 import HomePageBottom from "../components/mainpage/HomePageBottom";
+import ContentsDrawer from "../components/mainpage/ContentsDrawer";
 
 function UnprotectedHome () {
 
@@ -87,6 +88,11 @@ function UnprotectedHome () {
    
     return(
     <div className="unProtectedHomeContainer">
+
+        <div className="Home-contentsdrawer-container">
+            <ContentsDrawer />
+        </div>
+        
 
         <Header  isAuthorized = { isAuthorized }/>
 

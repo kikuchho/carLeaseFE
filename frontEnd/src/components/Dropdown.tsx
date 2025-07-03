@@ -68,7 +68,7 @@ const [isOpen, setIsOpen] = useState(false);
                     <div className="dropdown-item-button"> FAQ・お問い合わせ <img src={arrowright} className="arrow-logo"  /> </div>  
                     <div className="dropdown-item-button"> リコール情報 <img src={arrowright} className="arrow-logo"  /> </div>  
                     <div className="dropdown-item-button2"> 
-                        <div className="grid-container">
+                        <div className="grid-container-dropdown">
                             <div className="dditem1"> TOYOTA アカウントセンター   </div>
                             <div className="dditem2"> <img src={arrowright} className="arrow-logo"  /> </div>
                             <div className="dditem3"> TOYOTAアカウント 登録情報の確認・編集ができます。 </div>

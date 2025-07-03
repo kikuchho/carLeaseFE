@@ -1,0 +1,122 @@
+
+.drawer-container{
+  
+}
+
+.drawer-contents {
+    width: 400px;
+    height: 200px;
+    background-color: black;
+    margin-top: 200px;
+    right: 0;
+    transform: translateX(21rem) ; 
+    z-index: 1000; 
+
+    transition: transform 600ms;
+   
+}
+
+
+.drawer-contents:hover {
+   transform: translateX(0); /* Slide in when open */
+}
+
+.drawer-contents.past-threshold {
+    
+   transform: translateX(21rem)
+
+}
+
+.drawer-contents.past-threshold:hover {
+   transform: translateX(0rem); /* Slide in when open */
+}
+
+.drawer-header {
+    position: absolute;
+    width: 180px;
+    background-color: transparent;
+    font-size: 20px;
+    color: white;
+    transform: rotate(90deg) translateY(60px) translateX(130px);
+}
+
+.sticky-buttons-footter {
+    width: 700px;
+    height: 90px;
+    background-color: black;
+    bottom: 0;
+    left: 200px;
+    z-index: 1000;
+}
+
+
+
+
+
+
+/* .drawer-container{
+  
+}
+
+.drawer-contents {
+    width: 400px;
+    height: 200px;
+    background-color: black;
+    margin-top: 200px;
+    right: 0;
+    transform: translateX(22rem) ; 
+    z-index: 1000; 
+
+    transition: transform 600ms;
+   
+} 
+
+@keyframes slideIn {
+    from {
+        transform: translateX(22rem); 
+    }
+    to {
+        transform: translateX(0); 
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0); 
+    }
+    to {
+        transform: translateX(22rem); 
+    }
+}
+
+.drawer-contents:hover {
+   transform: translateX(0); 
+}
+
+.drawer-contents.past-threshold {
+    
+   transform: translateX(22rem)
+}
+
+.drawer-contents.past-threshold:hover {
+   transform: translateX(0rem); 
+}
+
+.dropdown-header {
+    position: absolute;
+    width: 190px;
+    background-color: black;
+    color: white;
+    transform: rotate(90deg) translateY(78px) translateX(90px);
+}
+
+.sticky-buttons-footter {
+    width: 700px;
+    height: 90px;
+    background-color: black;
+    bottom: 0;
+    left: 200px;
+    z-index: 1000;
+}
+
+*/

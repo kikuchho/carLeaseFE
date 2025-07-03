@@ -1,7 +1,7 @@
 .home-page-bottom-container{
     position: relative;
     width: 100%;
-    height: auto;
+    height: 700px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,12 +12,13 @@
 
 .fifthpoint-title {
     text-align: center;
-    font-size: 28px;
+    font-size: 30px;
     font-weight: 600;
+    margin-top: 10px;
 }
 
 .titleimg {
-    width: 20px;
+    width: 25px;
     height: auto;
     display: block;
     object-fit: cover;
@@ -30,39 +31,361 @@
     justify-content: center;
 }
 
-.grid-container {
+.grid-container-HomePageBottom {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto;
     grid-template-areas:
-        "item1 item2 item3"
-        "item4 item4-middle item5";
+        "item1 item1 item2 item2 item3 item3"
+        "item4 item4 item4 item5 item5 item5";
     gap: 10px;
     padding: 20px;
-    width: 90%;
+    width: 650px;
     max-width: 1200px;
 }
 
-/* First row items remain default */
+.HPB-grid-text {
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    color: #333;
+    transform: translateY(-70px);
+}
+
+/* First row items  */
+
+.grid-item1 {
+    width: 100%;
+    height: 270px;
+   justify-self: center;
+   background-color: white;
+    grid-area: item1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+
+.grid-item2 {
+    width: 100%;
+    height: 270px;
+   justify-self: center;
+   background-color: white;
+    grid-area: item2;
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+.grid-item3 {
+    width: 100%;
+    height: 270px;
+   justify-self: center;
+   background-color: white;
+    grid-area: item3;
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
 
 /* Second row items */
-.grid-item:nth-child(4) {
+.grid-item4 {
     grid-area: item4;
-    justify-self: end;
+    width: 100%;
+    height: 270px;
+   justify-self: center;
+   background-color: white;
+    margin-right: 10px; /* Add some space between items */
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
 }
-
-.grid-item:nth-child(5) {
+.grid-item5 {
     grid-area: item5;
-    justify-self: start;
-}
-
-/* Empty middle space in row 2 */
-.grid-item-middle {
-    grid-area: item4-middle;
+    width: 100%;
+    height: 270px;
+    background-color: white;
+    justify-self: center;
+    margin-left: 10px; /* Add some space between items */
+     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    
 }
 
 .grid-img {
-    width: 190px;
+    width: 210px;
     height: auto;
     display: block;
     object-fit: cover;
+    margin-top: 20px;
+    transform: translateY(20px);
+}
+
+.bottombutton-containerHPB {
+    position: relative;
+    display: flex;
+    flex-direction: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 20px;
+    padding-bottom: 50px;
+    border-bottom: #000000 1px solid;
+}
+
+.bottombuttonHPB {
+    position: relative;
+    width: 330px;
+    height: 70px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #000000;
+    padding-left: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.bottombuttonHPB:hover {
+    background-color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0px 5px 0px red;
+    color: #ff0000;
+}
+
+.bottombuttonimgHPB {
+    width: 20px;
+    height: auto;
+    object-fit: contain;
+    display: block; 
+    position: relative;
+    padding-right: 10px ;
+}
+
+.bottombuttonTXTHPB{
+    margin-left: 10px;
+    font-weight: 700;
+    text-align: center;
+    font-size: 16px;
+}
+
+.ads-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 50px;
+    margin-left: 10%;
+    margin-right: 10%;
+    justify-content: center;
+    align-items: center;
+}
+
+.ad-img1 {
+    width: 300px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* termsandcondition container */
+
+.termsandcond-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    margin-top: 20px;
+    padding-top: 50px;
+    background-color: #eaf3f5;
+    width: 100%;
+    height: 200px;
+    border-bottom: #000000 5px solid;
+}
+
+.termsandcond1 {
+    top: 10px;
+    width: 800px;
+    font-size: 12px;
+    display: flex;
+}
+
+.termsandcond3 {
+    width: 800px;
+    font-size: 12px;
+}
+
+.termsandcond2 {
+    width: 800px;
+    font-size: 12px;
+    display: flex;
+}
+
+.term-marker {
+    margin-right: 20px;
+}
+
+.termsandcondtext2 {
+    width: 750px;
+}
+
+.termsandcondtext1 {
+    width: 750px;
+}
+
+/* footercontainer */
+.HomeFooterContainer {
+    display: flex;
+    flex-direction: flex;
+   align-items: stretch;
+    justify-content: space-evenly;
+    width: 100%;
+    
+    background-color: #f9f9f9;
+    padding-top: 40px;
+    
+}
+
+.HomeFooteritem1  {
+    padding: 10px;
+    padding-left: 20px;
+    align-items: start;
+    justify-content: center;
+}
+
+.HomeFooteritem2-column {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    width: 150px;
+    height: 90%;
+}
+
+
+.HomeFooteritem3-row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 10px;
+    width: 300px;
+    height: 100%;
+}
+
+.HomeFooteritem3-column1  {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+     justify-content: start;
+    width: 150px;
+    height: 100%;
+}
+
+.HomeFooteritem3-column2 {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+     justify-content: start;
+    width: 150px;
+    height: 100%;
+}
+
+.columnempty {
+    width: 100%;
+    height: 24px;
+}
+
+
+.footerbutton1{
+    display: flex;
+    flex-direction: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 120px;
+    height: 42px;
+    font-weight: 700;
+}
+
+.HomeFooteritem2 {
+    padding: 10px;
+}
+.HomeFooteritem3 {
+    padding: 10px;
+}
+
+.HomeFooteritem4 {
+    padding: 10px;
+    padding-right: 20px;
+}
+
+.snslogo {
+    width: 30px;
+    height: auto;
+    object-fit: cover;
+}
+
+.HomeFootersns-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 150px;
+    height: auto;  
+}
+
+.HomeFooteritem4-column{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    gap : 10px;
+}
+
+
+.toyotamagazine {
+    display: flex;
+    flex-direction: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.footersubtext {
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.footertext{
+    font-size: 18px;
+    color: #333;
+    font-weight: 800;
+}
+
+.HomeFooteritem5 {
+    display: flex;
+    flex-direction: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 10px;
+    font-size: 14px;
+    margin-top: 70px;
+    margin-bottom: 10px;
+}
+
+.HomeFooterContainer-master {
+    background-color: #f9f9f9;
+    height: 470px;
 }
