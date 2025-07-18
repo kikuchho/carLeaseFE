@@ -1,10 +1,229 @@
 .form-container {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+    
+    text-align: start;
     display: flex;
-    place-items: center;
+    flex-direction: column;
+    align-items: start;
+    
     min-width: 320px;
     min-height: 100vh;
+
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+   
+   
+    border-bottom: 1px solid #7c7c7c;
+}
+
+.form-logo {
+    width: 100px;
+    height: auto;
+    margin-right: 20px; 
+    margin-left: 50px;
+}
+
+.form-sub-header {
+    height: 40px;
+    width: 100%;
+    background-color: transparent;
+    text-align: start;
+    color: rgb(0, 0, 0);
+    font-weight: bolder;
+    padding-top: 48px;
+    padding-left: 0px;
+    padding-bottom: 48px;
+    font-size: 27px;
+}
+
+.form-body {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.form-input {
+    color: black;
+    border-bottom: 2px solid #c2c2c2;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    width: 100%;
+    height: 30px;
+    background-color: white;
+}
+
+.form-input:focus {
+    border-bottom: 2px solid #e50000; /* Toyota red color */
+    outline: none; /* Remove default browser outline */
+    transition: border-bottom 0.3s ease; /* Smooth transition effect */
+    background-color: white;
+}
+
+.invalid-username {
+    color: red;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.form-subtext {
+  
+}
+
+.form-subtext2 {
+    padding-bottom: 30px;
+    padding-top: 10px;
+}
+
+
+
+.form-button {
+    align-self: center;
+    height: 48px;
+    width: 240px;
+    background-color: #e50000; 
+    color: white;
+    border-radius: 5%;
+}
+
+.form-button:hover {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s ease;
+    border: 1px solid #e50000; /* Add border on hover */
+    border-radius: 5%;
+    
+}
+
+.form-button2-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px; 
+}
+
+.form-button2 {
+    
+    height: 48px;
+    width: 240px;
+    background-color: #ffffff; 
+    color: rgb(0, 0, 0);
+    border-radius: 5%;
+    border: 1px solid #000000; 
+}
+
+.form-button2:hover {
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    transition: background-color 0.3s ease;
+    border: 1px solid #000000; 
+    border-radius: 5%;
+    
+}
+
+.form-subtext3-container{
+    width: 720px;
+    height: 246px;
+    background-color: #ccc;
+}
+
+.form-subtext3 {
+    padding-top: 15px; 
+    padding-bottom: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 14px;
+}
+
+.form-subtext4 {
+    padding-top: 10px;
+    padding-left: 15px;
+    font-weight: 600;
+}
+
+/* Custom checkbox styles */
+
+.radiocheckcontainer {
+  display: block;
+  position: relative;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 17px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.radiocheckcontainer input {
+
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+  transform: translateY(10px);
+}
+
+/* On mouse-over, add a grey background color */
+.radiocheckcontainer:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.radiocheckcontainer input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.radiocheckcontainer input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.radiocheckcontainer .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }

@@ -1,0 +1,50 @@
+
+
+.fixed-footer-marker {
+    position: fixed;
+ 
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content: center;
+    
+    width: 800px;
+    height: 60px;
+    z-index: 1000;
+    background-color: darkgray;
+    bottom: 0;
+
+    left: 50%   ;
+    transform: translateX(-50%);
+}
+
+.fixed-footer-marker-container {
+    position: absolute;
+    width: 100%;
+    
+}
+
+.fixed-footer-item {
+    border-radius: 7px;
+    background-color: #333;
+    width: 390px;
+    height: 45px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    transform: translateY(1px);
+    cursor: pointer;
+    
+}
+
+.fixed-footer-text {
+    color: white;
+    text-align: start;
+    margin-top: 10px;
+    margin-left: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 10px;
+}

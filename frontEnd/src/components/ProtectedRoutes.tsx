@@ -7,10 +7,11 @@ import { useEffect, useState } from "react";
 
 type ProtectedRouteProps = {
     children: React.ReactNode;
+    path?: string;
 };
 
 
-function ProtetecdRoute({ children }: ProtectedRouteProps) {
+function ProtetecdRoute({ children, path = "/login" }: ProtectedRouteProps) {
     const [isAuthorized, setIsAuthorized] = useState<null | boolean>(null);
 
     useEffect(() => {
@@ -73,7 +74,12 @@ function ProtetecdRoute({ children }: ProtectedRouteProps) {
     console.log("user is " + isAuthorized) 
     
     //return isAuthorized ? children : <Navigate to={"/login"} />
-    return isAuthorized ? children : <Navigate to={"/login"} />
+    // return isAuthorized ? children : 
+    // <Navigate to={path} />
+
+    return isAuthorized ? 
+        children : 
+        <Navigate to={`${path}${location.search}`} replace />;
     
 }
 

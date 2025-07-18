@@ -10,6 +10,7 @@ import yaris from "../assets/yaris.png";
 import arrowleft from "../assets/arrowleft.svg";
 import arrowright from "../assets/arrowright.svg";
 import ico_link_arrow from "../assets/icon_arrow.png";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -27,7 +28,7 @@ type Paylist = {
 
 function CardSlider() {
 
-    
+  const navigate = useNavigate();
     
   //----------------------get car list--------------------///
     
@@ -361,7 +362,7 @@ function CardSlider() {
         </div>
           <div className="buttombuttoncontainer">    
             <div className="buttombutton"> <p className="buttonbuttomTXT">一括払い、ローンとKINTOを比較する </p> <img src={ico_link_arrow} className="buttonbuttomimg" /> </div> 
-            <div className="buttombutton"> <p className="buttonbuttomTXT">この車種をKINTOでWEB見積り </p> <img src={ico_link_arrow} className="buttonbuttomimg" /> </div>      
+            <div className="buttombutton" onClick={() => navigate(`/carplan?carId=${paylist[currentSlideIndex - 1]?.id}`)}> <p className="buttonbuttomTXT">この車種をKINTOでWEB見積り </p> <img src={ico_link_arrow} className="buttonbuttomimg" /> </div>      
             
           </div>
       </div>

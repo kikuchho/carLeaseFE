@@ -11,7 +11,8 @@
     position: fixed;
     background-color: azure;
     transition: transform 600ms ;
-    transform: translateY(15rem); 
+    transform: translateY(15rem)   ; 
+    z-index: 1000;
 
     &.open {
         transform: translateY(0);

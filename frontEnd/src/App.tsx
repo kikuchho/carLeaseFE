@@ -8,6 +8,15 @@ import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import UnprotectedHome from './pages/unProtectedHome'
 import ProtectedRoute from './components/ProtectedRoutes'
+import Stepone from './pages/register/Stepone'
+import Steptwo from './pages/register/Steptwo'
+import Stepthree from './pages/register/Stepthree'
+import Stepfour from './pages/register/Stepfour'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import CarPlan from './pages/CarPlan'
+import CarPlanLoggedOut from './pages/CarPlanLoggedOut'
+import Stepfive from './pages/register/stepfive'
+
 
 function Logout() {
   localStorage.clear()
@@ -17,7 +26,7 @@ function Logout() {
 function RegisterAndLogout() {
   //clear token first 
   localStorage.clear()
-  return <Register />
+  return <Stepone /> 
 }
 
 function App() {
@@ -36,8 +45,15 @@ function App() {
           <Route  path='/' element={<UnprotectedHome /> } />
           <Route  path='/logout' element={<Logout/>    }   />
           <Route  path='/login' element={<Login/>    }   />
-          <Route  path='/register' element={ <RegisterAndLogout/>   }   />
+          <Route  path='/carplan' element={ <CarPlan isAuthorized={true}  />  }   />
+          <Route  path='/carplanloggedout' element={ <CarPlanLoggedOut />    }   />
+          <Route  path='/register/stepone' element={ <RegisterAndLogout/>   }   />
+          <Route  path='/register/steptwo' element={ <Steptwo/>  }   />
+          <Route  path='/register/stepthree' element={ <Stepthree/>  }   />
+          <Route  path='/register/stepfour' element={ <Stepfour/>  }   />
+          <Route  path='/register/stepfive' element={ <Stepfive/>  }   />
           <Route  path='*' element={ <NotFound />  }   />
+
         </Routes>
       </BrowserRouter>
     </>

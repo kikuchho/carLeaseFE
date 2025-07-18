@@ -1,0 +1,187 @@
+.step-four-button {
+    align-self: center;
+    height: 48px;
+    width: 240px;
+    background-color: #e50000; 
+    color: white;
+    border-radius: 5%;
+}
+
+.step-four-button:hover {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s ease;
+    border: 1px solid #e50000; /* Add border on hover */
+    border-radius: 5%;
+    
+}
+
+.step-four-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px; 
+}
+
+
+.step-four-footer {
+    
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #ffffff;
+    background-color: #ececec;
+}
+
+
+
+
+/* gauge */
+.stpthree-bargauge{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+    width: 750px;
+    background-color: #f3f3f3;
+    border-radius: 25px;
+    gap: 20px;
+    justify-content: space-evenly;
+}
+
+
+.stpthreecircleone{
+    height: 32px;
+    width: 32px;
+    background-color: #e50000;
+    ;
+    border-radius: 50%;
+    font-size: 21px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.stpthreecircletwo{
+    height: 32px;
+    width: 32px;
+    background-color: #9e9e9e;
+    border-radius: 50%;
+    font-size: 21px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+
+
+.gaugethree{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.step-three-footer {
+    
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #ffffff;
+    background-color: #ececec;
+}
+
+
+.stpfour-title{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: start;
+    padding-top: 50px;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+
+
+
+.invalid-input-stepthree {
+    color: red;
+    width: 600px;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.step-four-container {
+    width: 800px;
+    margin: 0 auto; 
+}
+
+.step-four-content{
+    width: 100%;
+}
+
+.step-four-container2{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.stp-four-text-container {
+   display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.step-four-subtitle2 {
+   
+}
+
+
+.step-four-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px; 
+    gap: 20px;
+}
+
+.stp-four-subtext1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.step-four-subtitle1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    margin-top: 20px;
+}
+
+.stpfive-redline {
+    width: 30px;
+    height: 2px;
+    background-color: #e50000;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}

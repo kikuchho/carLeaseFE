@@ -18,17 +18,16 @@
 
 
 .drawer-contents:hover {
-   transform: translateX(0); /* Slide in when open */
+   transform: translateX(4rem); /* Slide in when open */
 }
 
 .drawer-contents.past-threshold {
+    transform: translateX(21rem)
     
-   transform: translateX(21rem)
-
 }
 
 .drawer-contents.past-threshold:hover {
-   transform: translateX(0rem); /* Slide in when open */
+   transform: translateX(4rem); /* Slide in when open */
 }
 
 .drawer-header {
@@ -50,6 +49,32 @@
 }
 
 
+.drawer-contents-body {
+    margin-left: 80px;
+    background-color: #333;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items:start;
+    justify-content: center;
+    gap: 10px;
+
+}
+
+.drawer-item {
+    color: white;
+    margin-left: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.drawer-item:hover {
+    opacity: 70%;
+    transition: opacity 0.5s;
+}
 
 
 

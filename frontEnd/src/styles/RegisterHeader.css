@@ -1,0 +1,16 @@
+.register-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+   
+   
+    border-bottom: 1px solid #7c7c7c;
+}
+
+.register-logo {
+    width: 100px;
+    height: auto;
+    margin-right: 20px; 
+    margin-left: 50px;
+}

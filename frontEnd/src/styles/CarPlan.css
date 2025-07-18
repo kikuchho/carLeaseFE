@@ -1,0 +1,8 @@
+.car-plan-content{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+

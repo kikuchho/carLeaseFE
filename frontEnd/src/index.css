@@ -62,3 +62,104 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* progress bar for register page  */
+.register-bargauge{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 50px;
+    width: 750px;
+    background-color: #f3f3f3;
+    border-radius: 25px;
+    gap: 20px;
+    justify-content: space-evenly;
+}
+
+
+.registercircleone{
+    height: 32px;
+    width: 32px;
+    background-color: #e50000;
+    ;
+    border-radius: 50%;
+    font-size: 21px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.registercircletwo{
+    height: 32px;
+    width: 32px;
+    background-color: #9e9e9e;
+    border-radius: 50%;
+    font-size: 21px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+
+
+.registegauge{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.register-container {
+    width: 800px;
+    margin: 0 auto; 
+}
+
+
+/* register button */
+
+.register-button {
+    align-self: center;
+    height: 48px;
+    width: 240px;
+    background-color: #e50000; 
+    color: white;
+    border-radius: 5%;
+}
+
+.register-button-black {
+    align-self: center;
+    height: 48px;
+    width: 240px;
+    background-color: #ffffff; 
+    color: rgb(0, 0, 0);
+    border-radius: 5%;
+    border: 1px solid #000000; 
+}
+
+.register-button-black:hover {
+    background-color: #000000; 
+    color: white;
+    transition: background-color 0.3s ease;
+    border: 1px solid #000000; /* Add border on hover */
+    border-radius: 5%;
+}
+
+.register-button:hover {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s ease;
+    border: 1px solid #e50000; /* Add border on hover */
+    border-radius: 5%;
+    
+}
+
+.register-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px; 
+}

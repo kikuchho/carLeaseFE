@@ -14,6 +14,7 @@ import CardSlidertemp from "../components/CardSlidertemp";
 import ThirdPoint from "../components/mainpage/Thirdpoint";
 import HomePageBottom from "../components/mainpage/HomePageBottom";
 import ContentsDrawer from "../components/mainpage/ContentsDrawer";
+import FixedFooter from "../components/mainpage/FixedFooter";
 
 function UnprotectedHome () {
 
@@ -89,8 +90,11 @@ function UnprotectedHome () {
     return(
     <div className="unProtectedHomeContainer">
 
+        <FixedFooter />
+        
         <div className="Home-contentsdrawer-container">
             <ContentsDrawer />
+            
         </div>
         
 

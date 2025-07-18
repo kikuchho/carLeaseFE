@@ -1,0 +1,25 @@
+.kinto-logo {
+    width: 100px;
+    height: auto;
+    margin-left: 20px;
+    display: block;
+}
+
+.car-plan-header-container {
+    width: 100%;
+    height: 60px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    border-bottom: 1px solid #7a7a7a;
+    transition: transform 0.3s ease-in-out;
+}
+
+.car-plan-header-container.closed {
+
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+    
+   
+}
