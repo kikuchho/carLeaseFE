@@ -7,7 +7,7 @@ const ContentsDrawer = () => {
     //USE STICKY INSET INSTEAD OF ABSOLUTE / // FIXED POSITIONING
 
     const [isOpen, setIsOpen] = React.useState(false);
-    const [isPastThreshold, setIsPastThreshold] = useState(false);
+    const [isPastThreshold1, setIsPastThreshold1] = useState(false);
     // Difference between : Distance from top of document to top of drawer and : Distance user has scrolled from top
     const [scrollDistance, setScrollDistance] = useState(0); 
     const [horizontalScroll, setHorizontalScroll] = useState(0); 
@@ -38,14 +38,14 @@ const ContentsDrawer = () => {
                 // getBoundingClientRect gives position relative to viewport
                 const rect = footerElement.getBoundingClientRect();
                 // Add current scroll position to get absolute position from document top
-                currentFooterDistance = rect.top + window.scrollY;
+                currentFooterDistance =  window.scrollY;
                 setFooterDistanceFromTop(currentFooterDistance);
             }
             
-            const scrollDistanceFromTopOfFooter = scrollDistanceFromTop - currentFooterDistance;
+            const scrollDistanceFromTopOfFooter = scrollDistanceFromTop ;
             setScrollDistance(scrollDistanceFromTop);
             setHorizontalScroll(scrollDistanceFromLeft);
-            setIsPastThreshold(scrollDistanceFromTop >= currentFooterDistance); 
+            setIsPastThreshold1(window.scrollY >= 6000); 
 
             console.log("Window resized to:", window.innerWidth);
             console.log(scrollDistanceFromTop, "scrollPosition", scrollDistanceFromTopOfFooter , "distance betwn drawer to scrollY");
@@ -70,10 +70,10 @@ const ContentsDrawer = () => {
     
     <div>   
         <div className="drawer-container">
-            <div  className={ `drawer-contents   ${isPastThreshold ? "past-threshold" : "" }  ` }
+            <div  className={ `drawer-contents   ${isPastThreshold1 ? "past-threshold" : "" }  ` }
                 style={{ 
-                    position: isPastThreshold ? 'absolute' : 'fixed',
-                    top: isPastThreshold ? `${footerDistanceFromTop}px` : 'auto',  
+                    position: isPastThreshold1 ? 'absolute' : 'fixed',
+                    top: isPastThreshold1 ? `6000px` : 'auto',  
                 }}
             >
 

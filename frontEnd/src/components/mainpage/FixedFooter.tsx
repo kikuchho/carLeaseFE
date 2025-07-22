@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../../styles/FixedFooter.css';
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import { FaCalculator } from "react-icons/fa";
 
 const FixedFooter = () => {
     const [isPastThreshold, setIsPastThreshold] = useState(false);
+    const [pageHeight, setPageHeight] = useState(0);
 
     //track scroll position
         useEffect(() => {
@@ -13,11 +14,26 @@ const FixedFooter = () => {
     
     
             const handleScroll = () => {
-                const scrollDistanceFromTop = window.scrollY;
-               
-                setIsPastThreshold(scrollDistanceFromTop >= 6000); 
-    
-                console.log(scrollDistanceFromTop, "scrollPosition");
+                const footerElement = document.querySelector('.HomeFooterContainer-master');
+           
+
+                
+                if (footerElement) {
+                    console.log(footerElement.getBoundingClientRect(), "footerElement");
+                
+                    
+                    const scrollDistanceFromTop = window.scrollY;
+
+                    const viewportHeight = window.innerHeight;
+                    const pageHeight = document.documentElement.scrollHeight ;
+                    setPageHeight(pageHeight - viewportHeight);
+                    console.log("ページの高さ（scrollHeight）:", pageHeight - viewportHeight);
+                
+                    setIsPastThreshold(scrollDistanceFromTop >= 6000 ); 
+                    //setIsPastThreshold(footerElement.getBoundingClientRect().bottom < 600 ); 
+        
+                    console.log(scrollDistanceFromTop, "scrollPosition");
+                }
             };
     
             
@@ -36,7 +52,8 @@ const FixedFooter = () => {
        <div className="fixed-footer-marker-container">
             <div className="fixed-footer-marker" style={{ 
                     position: isPastThreshold ? 'absolute' : 'fixed',
-                    top: isPastThreshold ? '6555px' : 'auto',  
+                    //top: isPastThreshold ? '6520px' : 'auto',  
+                    top: isPastThreshold ? `${pageHeight + 80}px ` : '',
                     }}>
                 <div className='fixed-footer-item'> 
                     <div className='fixed-footer-text'> 

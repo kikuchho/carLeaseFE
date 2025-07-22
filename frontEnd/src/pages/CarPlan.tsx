@@ -38,8 +38,38 @@ import CarPlanHeader from "../components/carPlan/CarPlanHeader";
 //         }
 //        
 //     ],
-//     "colors": [],
-//     "interiors": [],
+//     "colors": [
+//        {
+//     "id": 1,
+//     "color": "プラチナホワイトパールマイカ",
+//     "color_hex": "#ededf6",
+//     "subname": "特別価格",
+//     "name": "プラチナホワイトパールマイカ",
+//     "car_id": 2,
+//     "price": 0
+//  },
+//  {
+//     "id": 2,
+//     "color": "スーパーホワイトⅡ",
+//     "color_hex": "#ededf6",
+//     "subname": "標準色",
+//     "name": "スーパーホワイトⅡ",
+//     "car_id": 2,
+//     "price": 0
+//  }, ]
+// "interiors": [
+//         {
+//             "id": 1,
+//             "interior": "ブラック",
+//             "interiorcolor": "ブラック",
+//             "seat": "ファブリック･ブラック(フロントシート:ヘッドレスト一体型)",
+//             "imgname": "yaris_interior_ex",
+//             "name": "1",
+//             "car_id": 2,
+//             "price": 0
+//         }
+//     ],
+//     
 //     "option_packages": []
 // }
 interface gradelist
@@ -53,6 +83,29 @@ interface gradelist
     price: number;
 }
 
+interface colors
+{
+    id: number;
+    color: string;
+    color_hex: string;
+    subname: string;
+    name: string;
+    car_id: number;
+    price: number;
+}
+
+interface interiors
+{
+    id: number;
+    interior: string;
+    interiorcolor: string;
+    seat: string;
+    imgname: string;
+    name: string;
+    car_id: number;
+    price: number;
+}
+
 
 interface CarOption 
 {    
@@ -61,8 +114,8 @@ interface CarOption
     price: number;
     imgname: string;
     grades:gradelist[];
-    colors: any[];
-    interiors: any[];
+    colors: colors[];
+    interiors: interiors[];
     option_packages: any[];
 }
 
@@ -77,6 +130,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
     const [bookmarks, setBookmarks] = useState<string[]>([]);
     const [carOptions, setCarOptions] = useState<CarOption | null>(null);
 
+    
 
     //get bookmarks function 
     useEffect(() => {
@@ -192,7 +246,26 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                 price: grade.price
             }));
 
+            const colorlists: colors[] = response.data.colors.map((color: any) => ({
+                id: color.id,
+                color: color.color,
+                color_hex: color.color_hex,
+                subname: color.subname,
+                name: color.name,
+                car_id: color.car_id,
+                price: color.price
+            }));
 
+            const interiorlists: interiors[] = response.data.interiors.map((interior: any) => ({
+                id: interior.id,
+                interior: interior.interior,
+                interiorcolor: interior.interiorcolor,
+                seat: interior.seat,
+                imgname: interior.imgname,
+                name: interior.name,
+                car_id: interior.car_id,
+                price: interior.price
+            }));
 
             const carOptionTemp : CarOption = {
                 id: response.data.id,
@@ -200,8 +273,8 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                 price: response.data.price,
                 imgname: response.data.imgname,
                 grades: gradelists,
-                colors: [],
-                interiors: [],
+                colors: colorlists,
+                interiors: interiorlists,
                 option_packages: []
             } 
                 
@@ -259,6 +332,29 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                                     </li>
                                 ))}
                             </ul>
+
+                            
+                            <h3>Colors:</h3>
+                            <ul>
+                                {carOptions.colors.map((color) => (
+                                    <li key={color.id} style={{ color: color.color_hex }}>
+                                        {color.name} - {color.subname} - Price: {color.price} JPY
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <h3>インテリアカラー</h3>
+                            <ul>
+                                {carOptions.interiors.length > 0 ? (
+                                    carOptions.interiors.map((interior, index) => (
+                                        <li key={index}>{interior.seat} - Price: {interior.price} JPY</li>
+                                    ))
+                                ) : (
+                                    <li>インテリアカラーはありません。</li>
+                                )}
+                            </ul>
+
+
                         </div>
                     ) : (
                         <p>Loading car options...</p>
@@ -287,3 +383,25 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
     );
 }
 export default CarPlan;
+
+export const calculateMonthlyPayment = (price: number, downPayment: number, bonus: number, contractTerm: number): number => {
+    //contract term : unit is in years
+    //bonus : we asssume that bonus is paid twice a year
+    //price : total price of the car
+    
+    //step1
+    const monthlyPayment1 = price - (bonus*2*contractTerm);
+    //step2
+    const monthlyPayment2 = monthlyPayment1/(12 * contractTerm);
+
+    //step3: rounding the monthly payment to the nearest integer
+    const monthlyPaymentfinal = Math.round(monthlyPayment2);
+    
+    
+    // const loanAmount = price - downPayment;
+    // const monthlyRate = interestRate / 100 / 12;
+    // const numberOfPayments = loanTerm * 12;
+
+    // const monthlyPayment = (loanAmount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -numberOfPayments));
+    return monthlyPaymentfinal;
+}
