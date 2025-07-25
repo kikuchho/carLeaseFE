@@ -54,6 +54,7 @@ interface option_packages
     title: string;
     subtitle: string[];
     listItems: {
+        id: number;
         item: string;
         price: number;
         url: string;
@@ -62,6 +63,41 @@ interface option_packages
     car_id: number;
     price: number;
 }
+
+
+interface interiorExteriorUpgrade
+{
+    id: number;
+    Interior_exterior_upgrade: string;
+    imgurl: string;
+    is_exterior: boolean;
+    name: string;
+    car_id: number;
+    price: number;
+}
+
+interface tireUpgrade 
+{
+    id: number;
+    Tire_upgrade: string;
+    name: string;
+    title: string;
+    description: string;
+    car_id: number;
+    price: number;
+}
+
+interface numberPlate 
+{
+    id: number;
+    title: string;
+    imgurl: string;
+    numberplate: string;
+    car_id: number;
+    price: number;
+}
+
+
 
 
 interface CarOption 
@@ -74,7 +110,39 @@ interface CarOption
     colors: colors[];
     interiors: interiors[];
     option_packages: option_packages[];
+    interior_exterior_upgrades: interiorExteriorUpgrade[];
+    tire_upgrades: tireUpgrade[];
+    numberplates: numberPlate[];
 }
+
+export interface Plan
+{
+    plan_id: number;
+    contractYear: string;
+    bonusPayment: string;
+}
+
+export interface SavedBookMark 
+{
+    id: number;
+    author: number;
+    carid: number;
+    color_id: number;
+    contract_year: number;
+    created_at: string;
+    grade_id: number;
+    imgname: string;
+    interior_exterior_upgrade_id: number;
+    interior_id: number;
+    numberplate_number: string;
+    option_package_id: number;
+    option_package_listitems: {}
+    plan: Plan[];
+    tire_upgrade_id: number;
+    updated_at: string;
+}
+
+
 
 
 
@@ -84,7 +152,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
     const carId = searchParams.get("carId");
 
     const [content, setContent] = useState<string | null>(null);
-    const [bookmarks, setBookmarks] = useState<string[]>([]);
+    const [bookmarks, setBookmarks] = useState<SavedBookMark[]>([]);
     const [carOptions, setCarOptions] = useState<CarOption | null>(null);
 
     const [monthlyPayment, setMonthlyPayment] = useState<number>(0);
@@ -98,7 +166,11 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
     const [selectedColor, setSelectedColor] = useState<colors | null>(null);
     const [selectedInterior, setSelectedInterior] = useState<interiors | null>(null);
     const [selectedOptionPackage, setSelectedOptionPackage] = useState<option_packages | null>(null);
-     const [selectedOptionPackageindex, setSelectedOptionPackageindex] = useState<number >(0);
+    const [selectedOptionPackageindex, setSelectedOptionPackageindex] = useState<number >(0);
+    const [selectedInteriorExteriorUpgrade, setSelectedInteriorExteriorUpgrade] = useState<interiorExteriorUpgrade | null>(null);
+    const [selectedTireUpgrades, setSelectedTireUpgrade] = useState<tireUpgrade | null>(null);
+    const [selectedNumberPlates, setSelectedNumberPlates] = useState<numberPlate | null>(null);
+    const [numberplateNumber, setNumberplateNumber] = useState<string>("");
 
     // useeffect for calculating monthly payment WITH OPTIONS
     useEffect(() => {
@@ -116,6 +188,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         if(!selectedOptionPackage && carOptions.option_packages.length > 0) {
         setSelectedOptionPackage(carOptions.option_packages[0]);
         }
+       
         
         // Calculate total price with options
         let totalPrice = monthlyPayment;
@@ -125,17 +198,29 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         if (selectedColor) totalPrice += selectedColor.price;
         if (selectedInterior) totalPrice += selectedInterior.price;
         if (selectedOptionPackage) totalPrice += selectedOptionPackage.listItems[selectedOptionPackageindex].price; // Assuming you want to add the price of the first item in the option package
-        
+       
+       
+        if (selectedInteriorExteriorUpgrade){
+            totalPrice += selectedInteriorExteriorUpgrade.price;
+        } 
+        if (selectedTireUpgrades){
+            totalPrice += selectedTireUpgrades.price;
+        }
+        if (selectedNumberPlates){
+            totalPrice += selectedNumberPlates.price;
+        } 
+
         // Calculate payments
         //const basePayment = calculateMonthlyPayment(carOptions.price, bonusPayment, contractTerm);
         const optionPayment = totalPrice;
         
         console.log(" selectedoptionpackage price " + selectedOptionPackage?.listItems[selectedOptionPackageindex].price)
         console.log("optionPayment is " + optionPayment, "selectedGrade/color/interior.price " + selectedGrade?.price, selectedColor?.price, selectedInterior?.price );
+        console.log( "bookmark is:" + bookmarks[5]  )
         //setMonthlyPayment(basePayment);
         setMonthlyPaymentwithOption(optionPayment);
     }
-    }, [carOptions, selectedGrade, selectedColor, selectedInterior, bonusPayment, contractTerm, selectedOptionPackage, selectedOptionPackageindex]);
+    }, [carOptions, selectedGrade, selectedColor, selectedInterior, bonusPayment, contractTerm, selectedOptionPackage, selectedOptionPackageindex, selectedInteriorExteriorUpgrade, selectedTireUpgrades, selectedNumberPlates]);
 
     //get bookmarks function 
     useEffect(() => {
@@ -159,11 +244,52 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 
     const getBookmarks = async () => { 
     
-        api
-        .get("/api/bookmarks/")
-        .then((res) => { setBookmarks(res.data); console.log(res.data) })
-        .catch((err) => { console.log(err); });
 
+        try{
+
+             api
+            .get("/api/bookmarks/")
+            .then((res) => { 
+                
+                
+                const response = res.data;
+
+                const PlanTemp: Plan[] = response.map((bookmark: any) => ({
+                    plan_id: bookmark.plan[0].plan_id,
+                    contractYear: bookmark.plan[0].contractYear,
+                    bonusPayment: bookmark.plan[0].bonusPayment
+                }));
+
+                const bookmarktemp: SavedBookMark[] = response.map((bookmark: any) => ({
+                    id: bookmark.id,
+                    author: bookmark.author,
+                    carid: bookmark.carid,
+                    color_id: bookmark.color_id,
+                    contract_year: bookmark.contract_year,
+                    created_at: bookmark.created_at,
+                    grade_id: bookmark.grade_id,
+                    imgname: bookmark.imgname,
+                    interior_exterior_upgrade_id: bookmark.interior_exterior_upgrade_id,
+                    interior_id: bookmark.interior_id,
+                    numberplate_number: bookmark.numberplate_number,
+                    option_package_id: bookmark.option_package_id,
+                    option_package_listitems: bookmark.option_package_listitems,
+                    plan: PlanTemp,
+                    tire_upgrade_id: bookmark.tire_upgrade_id,
+                    updated_at: bookmark.updated_at
+                }));
+
+                setBookmarks(bookmarktemp);
+            })
+            .catch((err) => { console.log(err); });
+
+
+
+
+        }catch (error) {
+            console.log("Error fetching bookmarks: ", error);
+        }
+       
         // .then((res) => res.data )
         // .then((data) => setBookmarks(data))   
         // .catch((err) => alert(err));
@@ -191,8 +317,24 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 
     const createBookmark = async (e :any) => {
         e.preventDefault();
+        
+        
+        const plan = [
+                {"plan_id": 1,  "contractYear" : `${contractTerm}`, "bonusPayment": `${bonusPayment}`},
+            ]
+        const contract_year = 2015 
+        const carid = carOptions?.id || 0; 
+        const imgname = carOptions?.imgname || ""; 
+        const grade_id = selectedGrade?.id || 0;
+        const color_id = selectedColor?.id || 0; 
+        const interior_id = selectedInterior?.id || 0; 
+        const option_package_id = selectedOptionPackage?.id || 0; 
+        const option_package_listitems = selectedOptionPackage?.listItems[selectedOptionPackageindex]
+        const interior_exterior_upgrade_id = selectedInteriorExteriorUpgrade?.id || 0; 
+        const tire_upgrade_id = selectedTireUpgrades?.id || 0; // Ensure tire_upgrade_id is a number, default to 0 if undefined
+        const numberplate_number = numberplateNumber || ""; // Ensure numberplate_number is a string, default to empty string if undefined
 
-        api.post("api/bookmarks/", { plan, contract_year, carid}).then((res) => {
+        api.post("api/bookmarks/", { plan, contract_year, carid,imgname, grade_id, color_id, interior_id,option_package_id, option_package_listitems ,interior_exterior_upgrade_id,tire_upgrade_id, numberplate_number }).then((res) => {
             if( res.status === 201) {
                 alert("Bookmark created successfully");
                
@@ -266,6 +408,34 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                 price: option.price
             }));
 
+            const interiorExteriorUpgrades: interiorExteriorUpgrade[] = response.data.interior_exterior_upgrades.map((upgrade: any) => ({
+                id: upgrade.id,
+                Interior_exterior_upgrade: upgrade.Interior_exterior_upgrade,
+                imgurl: upgrade.imgurl,
+                is_exterior: upgrade.is_exterior,
+                name: upgrade.name,
+                car_id: upgrade.car_id,
+                price: upgrade.price
+            }));
+
+            const tireUpgrades: tireUpgrade[] = response.data.tire_upgrades.map((tire: any) => ({
+                id: tire.id,
+                Tire_upgrade: tire.Tire_upgrade,
+                name: tire.name,
+                title: tire.title,
+                description: tire.description,
+                car_id: tire.car_id,
+                price: tire.price
+            }));
+
+            const numberPlates: numberPlate[] = response.data.numberplates.map((plate: any) => ({
+                id: plate.id,
+                title: plate.title,
+                imgurl: plate.imgurl,
+                numberplate: plate.numberplate,
+                car_id: plate.car_id,
+                price: plate.price
+            }));
 
            
 
@@ -277,13 +447,12 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                 grades: gradelists,
                 colors: colorlists,
                 interiors: interiorlists,
-                option_packages: optionPackages
+                option_packages: optionPackages,
+                interior_exterior_upgrades: interiorExteriorUpgrades,
+                tire_upgrades: tireUpgrades,
+                numberplates: numberPlates
             } 
-            
-                
-            
-            
-            
+    
             setCarOptions(carOptionTemp); // This stores the entire object
 
 
@@ -295,14 +464,6 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 
 
     }
-
-    const author = "test1111" 
-    const plan = [
-            {"plan_id": 1, "name": "Basic", "amount": 500},
-            {"plan_id": 2, "name": "Premium", "amount": 1000}
-        ]
-    const contract_year = 2015 
-    const carid = 1 
 
 
 
@@ -426,6 +587,86 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                                     </ul>
                                 ) : (
                                     <p>オプションパッケージはありません。</p>
+                                )
+                            }
+
+                            <h3>追加いただける単品オプション</h3>
+                            {
+                                carOptions.interior_exterior_upgrades.length > 0 ? (
+                                    <ul>
+                                        {carOptions.interior_exterior_upgrades.map((upgrade, index) => (
+
+                                            <li key={upgrade.id}
+                                            onClick={() => {
+                                                if(upgrade === selectedInteriorExteriorUpgrade) {
+                                                setSelectedInteriorExteriorUpgrade(null)
+                                                } else {
+                                                    setSelectedInteriorExteriorUpgrade(upgrade)
+                                                }
+                                                
+                                                }}
+                                            >
+                                                <img src={upgrade.imgurl} alt={upgrade.Interior_exterior_upgrade} />
+                                                <h4>{upgrade.Interior_exterior_upgrade}</h4>
+                                                <p>Price: {upgrade.price} JPY</p>
+                                                <p>{upgrade.is_exterior ? "内外装向上" : "快適･利便性向上"}</p>
+                                            </li>
+
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>内外装向上オプションはありません。</p>
+                                )
+                            }
+
+                            <h3>寒冷地仕様・冬タイヤ</h3>
+                            {
+                                carOptions.tire_upgrades.length > 0 ? (
+                                    <ul>
+                                        {carOptions.tire_upgrades.map((tire, index) => (
+                                            <li key={tire.id}
+                                                onClick={() => {
+                                                if(tire === selectedTireUpgrades) {
+                                                    setSelectedTireUpgrade(null)
+                                                } else {
+                                                    setSelectedTireUpgrade(tire)
+                                                }
+                                                
+                                                }}
+                                            >
+                                                <h4>{tire.Tire_upgrade}</h4>
+                                                <p>{tire.title}</p>
+                                                <p>{tire.description}</p>
+                                                <p>Price: {tire.price} JPY</p>
+
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>寒冷地仕様・冬タイヤはありません。</p>
+                                )
+                            }
+                            <h3>希望ナンバー</h3>
+                            {   
+                                carOptions.numberplates.length > 0 ? (
+                                    <ul>
+                                        {carOptions.numberplates.map((plate) => (
+                                            <li key={plate.id}
+                                            onClick={() => {
+                                                if(plate === selectedNumberPlates) {
+                                                    setSelectedNumberPlates(null)
+                                                } else {
+                                                    setSelectedNumberPlates(plate)
+                                                }
+                                            }}
+                                            >
+                                                {plate.title} - Price: {plate.price} JPY
+                                            </li>
+                                        ))}
+                                    
+                                    </ul>
+                                ) : (
+                                    <p>希望ナンバーはありません。</p>
                                 )
                             }
 

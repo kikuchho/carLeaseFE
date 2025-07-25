@@ -362,7 +362,7 @@ function CardSlider() {
         </div>
           <div className="buttombuttoncontainer">    
             <div className="buttombutton"> <p className="buttonbuttomTXT">一括払い、ローンとKINTOを比較する </p> <img src={ico_link_arrow} className="buttonbuttomimg" /> </div> 
-            <div className="buttombutton" onClick={() => navigate(`/carplan?carId=${paylist[currentSlideIndex - 1]?.id}`)}> <p className="buttonbuttomTXT">この車種をKINTOでWEB見積り </p> <img src={ico_link_arrow} className="buttonbuttomimg" /> </div>      
+            <div className="buttombutton" onClick={() => navigate(`/carplan?carId=${paylist[currentSlideIndex - 1]?.id}&bookmark=-1`)}> <p className="buttonbuttomTXT">この車種をKINTOでWEB見積り </p> <img src={ico_link_arrow} className="buttonbuttomimg" /> </div>      
             
           </div>
       </div>

@@ -2,21 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { CiBookmark } from "react-icons/ci";
 import "../styles/RiseUpMenu.css";
 import api from "../api";
-
-
-interface Bookmark {
-    id: string;
-    plan: [];
-    contract_year: number;
-    carid: number;
-}
+import type { SavedBookMark, Plan } from "../pages/CarPlan";
 
 const RiseUpMenu = () => { 
     const [isOpened, setIsOpened] = useState(false);
     
     //------------state and logic for bookmarks----------------
     const [content, setContent] = useState<string | null>(null);
-    const [bookmarks, setBookmarks] = useState<Bookmark[] | null>(null);
+    const [bookmarks, setBookmarks] = useState<SavedBookMark[] | null>(null);
 
 
 
@@ -26,36 +19,63 @@ const RiseUpMenu = () => {
         console.log("bookmarks are " + bookmarks);
     }, []);
 
-    const getBookmarks = async () => { 
-        try {
-             api
-        .get("/api/bookmarks/")
-        .then((res) => { 
-            const response = res.data;
-            console.log("Response data:", response[0]);
-            const bookmarkTemp = res.data.map((bookmark: any) => ({
-                id: bookmark.id,
-                plan: bookmark.plan,
-                contract_year: bookmark.contract_year,
-                carid: bookmark.carid
-            }));
-           
-            setBookmarks(bookmarkTemp);
-            console.log(res.data);
-        })
-        .catch((err) => { console.log(err); });
-        }catch (error) {
-            console.error("Error fetching bookmarks:", error);
-        }
     
-       
 
+    const getBookmarks = async () => { 
+    
+        try{
+
+                api
+            .get("/api/bookmarks/")
+            .then((res) => { 
+                
+                
+                const response = res.data;
+
+                
+                const PlanTemp: Plan[] = response.map((bookmark: any) => ({
+                    plan_id: bookmark.plan[0].plan_id,
+                    contractYear: bookmark.plan[0].contractYear,
+                    bonusPayment: bookmark.plan[0].bonusPayment
+                }));
+
+                const bookmarktemp: SavedBookMark[] = response.map((bookmark: any) => ({
+                    id: bookmark.id,
+                    author: bookmark.author,
+                    carid: bookmark.carid,
+                    color_id: bookmark.color_id,
+                    contract_year: bookmark.contract_year,
+                    created_at: bookmark.created_at,
+                    grade_id: bookmark.grade_id,
+                    imgname: bookmark.imgname,
+                    interior_exterior_upgrade_id: bookmark.interior_exterior_upgrade_id,
+                    interior_id: bookmark.interior_id,
+                    numberplate_number: bookmark.numberplate_number,
+                    option_package_id: bookmark.option_package_id,
+                    option_package_listitems: bookmark.option_package_listitems,
+                    plan: PlanTemp,
+                    tire_upgrade_id: bookmark.tire_upgrade_id,
+                    updated_at: bookmark.updated_at
+                }));
+
+                setBookmarks(bookmarktemp);
+            })
+            .catch((err) => { console.log(err); });
+
+
+
+
+        }catch (error) {
+            console.log("Error fetching bookmarks: ", error);
+        }
+        
         // .then((res) => res.data )
         // .then((data) => setBookmarks(data))   
         // .catch((err) => alert(err));
     }
+    
 
-    const deleteBookmarks = async (id: string) => {
+    const deleteBookmarks = async (id: number) => {
          api
         .get("/api/bookmarks/delete/${id}/")
         .then((res) => { 
@@ -126,10 +146,20 @@ const RiseUpMenu = () => {
         {isOpened || isAnimating ? 
         <div className={`riseup-menu-content ${isOpened ? "rise-up open" : "fall-down"}`} ref={menuRef}>
             <div className="riseup-menu-items">
-                <p>Rise Up Item 1</p>
-                <p>Rise Up Item 2</p>
-                <p>Rise Up Item 3</p>
-                <p> {bookmarks && bookmarks.length > 0 && bookmarks[0].contract_year} </p>
+                {
+                    bookmarks && bookmarks.length > 0 ? 
+                    bookmarks.map((bookmark: SavedBookMark) => (
+                        <div key={bookmark.id} className="riseup-bookmark-item">
+                            <p>Car ID: {bookmark.carid}</p>
+                            <p>Contract Year: {bookmark.contract_year}</p>
+                            {/* <p>Plan: {bookmark.plan.map((p: any) => p.name).join(", ")}</p> */}
+                            <p>Plan: {bookmark.plan[0].bonusPayment}  </p>
+                            <button onClick={() => deleteBookmarks(bookmark.id)} className="riseup-menu-button">Delete Bookmark</button>
+                        </div>
+                    )) 
+                    : <p>No bookmarks available</p>
+                } 
+               
                
                 <button onClick={createBookmark} className="riseup-menu-button">Create Bookmark</button>
             </div>
@@ -143,3 +173,37 @@ const RiseUpMenu = () => {
 }
 
 export default RiseUpMenu;
+
+
+
+
+
+
+// const getBookmarks = async () => { 
+    //     try {
+    //          api
+    //     .get("/api/bookmarks/")
+    //     .then((res) => { 
+    //         const response = res.data;
+    //         console.log("Response data:", response[0]);
+    //         const bookmarkTemp = res.data.map((bookmark: any) => ({
+    //             id: bookmark.id,
+    //             plan: bookmark.plan,
+    //             contract_year: bookmark.contract_year,
+    //             carid: bookmark.carid
+    //         }));
+           
+    //         setBookmarks(bookmarkTemp);
+    //         console.log(res.data);
+    //     })
+    //     .catch((err) => { console.log(err); });
+    //     }catch (error) {
+    //         console.error("Error fetching bookmarks:", error);
+    //     }
+    
+       
+
+    //     // .then((res) => res.data )
+    //     // .then((data) => setBookmarks(data))   
+    //     // .catch((err) => alert(err));
+    // }
