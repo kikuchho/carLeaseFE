@@ -1,0 +1,37 @@
+.fixed-footer-carplay{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    height: 100px;
+    background-color:#00708d;
+    border-radius: 20px 20px 0 0;
+}
+
+
+.footer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: white;
+}
+
+.footer-header-left {
+    padding: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-header-right {
+
+    padding: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    
+    align-items: flex-end;
+}

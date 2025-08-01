@@ -6,3 +6,106 @@
     justify-content: center;
 }
 
+.option-selected{
+   border: 2px solid #007bff;
+}
+
+.numberplateinput{
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-right: 10px;
+   
+}
+
+.numberplateinput.hide{
+    display: none;
+}
+
+.numberplateinput.show{
+    display: block;
+} 
+
+.optionpackage{
+    width: 100%;
+}
+
+.optionpackageimg{
+    width: 100px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.hide{
+    display: none;
+}
+
+.show{
+    display: block;
+} 
+
+.interiorexteriorupgrade-img{
+    width: 100px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.interiorexteriorupgrade-title{
+    padding-top: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    
+    padding-bottom: 20px;
+}
+
+.interiorexteriorupgrade-option{
+    border: 1px solid #ccc;
+}
+.interiorexterior-check{
+    height: 20px;
+    width: 20px;
+    background-color: #007bff;
+    font-size: 20px;
+    margin-right: 10px;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.interiorexterior-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    
+}
+
+.carimage {
+  width: 100%;
+  min-width: 500px;
+  max-width: 1000px; /* Limit maximum width */
+  height: auto;
+  position: sticky;
+  top: 30%; /* Distance from top of viewport */
+  align-self: flex-start; /* Important for flex containers */
+}
+
+.car-plan-content {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 40px;
+  align-items: flex-start; /* Changed from center */
+}
+
+.car-image-container {
+  position: relative;
+  width: 100%;
+  min-height: 3300px; /* Give enough height for scrolling context */
+}

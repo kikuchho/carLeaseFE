@@ -3,9 +3,12 @@ import { CiBookmark } from "react-icons/ci";
 import "../styles/RiseUpMenu.css";
 import api from "../api";
 import type { SavedBookMark, Plan } from "../pages/CarPlan";
+import { useNavigate } from "react-router-dom";
 
 const RiseUpMenu = () => { 
     const [isOpened, setIsOpened] = useState(false);
+
+    const navigate = useNavigate();
     
     //------------state and logic for bookmarks----------------
     const [content, setContent] = useState<string | null>(null);
@@ -58,6 +61,8 @@ const RiseUpMenu = () => {
                     updated_at: bookmark.updated_at
                 }));
 
+                console.log("bookmark response are " , res.data);
+
                 setBookmarks(bookmarktemp);
             })
             .catch((err) => { console.log(err); });
@@ -77,11 +82,11 @@ const RiseUpMenu = () => {
 
     const deleteBookmarks = async (id: number) => {
          api
-        .get("/api/bookmarks/delete/${id}/")
+        .delete(`/api/bookmarks/delete/${id}/`)
         .then((res) => { 
 
             if(res.status === 204) {
-                alert("note deleted ")
+                alert(`note id = ${id} deleted `)
             }
             else{
                 alert("Failed to delete a note ")
@@ -151,11 +156,18 @@ const RiseUpMenu = () => {
                     bookmarks.map((bookmark: SavedBookMark) => (
                         <div key={bookmark.id} className="riseup-bookmark-item">
                             <p>Car ID: {bookmark.carid}</p>
-                            <p>Contract Year: {bookmark.contract_year}</p>
+                            <p>color id: {bookmark.color_id}</p>
                             {/* <p>Plan: {bookmark.plan.map((p: any) => p.name).join(", ")}</p> */}
-                            <p>Plan: {bookmark.plan[0].bonusPayment}  </p>
+                            <p>bonus payment Plan: {bookmark.plan[0].bonusPayment}  </p>
+                            <button onClick={() =>navigate(`/carplan?carId=${bookmark.carid}&bookmark=${bookmark.id}`) } className="riseup-menu-button">この料金見積りをする</button>
                             <button onClick={() => deleteBookmarks(bookmark.id)} className="riseup-menu-button">Delete Bookmark</button>
                         </div>
+
+
+
+
+
+                        
                     )) 
                     : <p>No bookmarks available</p>
                 } 
