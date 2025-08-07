@@ -4,27 +4,70 @@ import "../styles/RiseUpMenu.css";
 import api from "../api";
 import type { SavedBookMark, Plan } from "../pages/CarPlan";
 import { useNavigate } from "react-router-dom";
+import { IoMdClose } from "react-icons/io";
+import { getBookmark, getBookmarks } from "../apihelper/apihelper";
+import { images } from "../assets/images";
 
 const RiseUpMenu = () => { 
     const [isOpened, setIsOpened] = useState(false);
-
+    const [bookmarks, setBookmarks] = useState<SavedBookMark[] | null>(null);
     const navigate = useNavigate();
     
     //------------state and logic for bookmarks----------------
     const [content, setContent] = useState<string | null>(null);
-    const [bookmarks, setBookmarks] = useState<SavedBookMark[] | null>(null);
+    
 
+    useEffect(() => {
+        if (isOpened) {
+           document.body.style.overflow = 'hidden'; // Disable scrolling
+        }
+        else {
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+        }
+    }, [isOpened]);
 
 
     //get bookmarks function 
     useEffect(() => {
-        getBookmarks();
-        console.log("bookmarks are " + bookmarks);
+        const fetchBookmarks = async () => {
+            // const data = await getBookmarks();
+            // setBookmarks(data);
+
+            getBookmarks().then((data) => {
+                const savedbookmarktemp : SavedBookMark[] = [];
+                data.map((bookmark: SavedBookMark) => {
+                    console.log("Bookmark carid: ", bookmark.imgname);
+                    savedbookmarktemp.push(bookmark);
+                        
+                });
+                setBookmarks(savedbookmarktemp);
+                console.log("bookmarks are " + data[0]?.carid);
+            }).catch((error) => {
+                
+                console.error("Error fetching bookmarks:", error);
+            })
+            
+        };
+        fetchBookmarks();
     }, []);
+
+    // Extract fetchBookmarks as a named function so you can reuse it
+    const fetchBookmarks = async () => {
+        try {
+            const data = await getBookmarks();
+            const savedbookmarktemp: SavedBookMark[] = [];
+            data.forEach((bookmark: SavedBookMark) => {
+                savedbookmarktemp.push(bookmark);
+            });
+            setBookmarks(savedbookmarktemp);
+        } catch (error) {
+            console.error("Error fetching bookmarks:", error);
+        }
+    };
 
     
 
-    const getBookmarks = async () => { 
+    const oldgetBookmarks = async () => { 
     
         try{
 
@@ -87,6 +130,7 @@ const RiseUpMenu = () => {
 
             if(res.status === 204) {
                 alert(`note id = ${id} deleted `)
+                fetchBookmarks();
             }
             else{
                 alert("Failed to delete a note ")
@@ -96,7 +140,7 @@ const RiseUpMenu = () => {
          })
         .catch((err) => { console.log(err); });
 
-        getBookmarks(); //refresh the bookmarks after deleting
+         //refresh the bookmarks after deleting
 
     }
 
@@ -144,17 +188,69 @@ const RiseUpMenu = () => {
 
 
     return(
-    <div>
+    <div className="riseup-menu-container">
         <div onClick={() => {setIsOpened(!isOpened); setIsAnimating(true);} } className="riseup-menu-button" > 
             <CiBookmark size={"25px"}/> 
         </div>
         {isOpened || isAnimating ? 
         <div className={`riseup-menu-content ${isOpened ? "rise-up open" : "fall-down"}`} ref={menuRef}>
             <div className="riseup-menu-items">
+
+                <div style={{paddingTop:"30px",display: "flex", justifyContent: "end", alignItems: "center"}}> 
+                    <div className="riseup-close-button">
+                        <IoMdClose  onClick={() => {
+                            setIsOpened(false);
+                            setIsAnimating(true);
+                        }} size={"35px"}/>
+                    </div>
+                </div>
+                
+
+                <div> 
+                    <h4>ブックマーク</h4>
+                    <div>
+
+                        見積りの保存期間は約12ヵ月です。経過後は自動的に削除されます。
+                    </div>
+                </div>
+                
+                <div style={{display: "flex"}}>
+                    <div>
+                        すべて
+                    </div>
+                    <div>
+                        カローラ スポーツ
+                    </div>
+                </div>
+                
+
+                <div>
+                    お気に入りにした車種
+                </div>
+                
+                <div className="riseup-bookmark-top-container">
+                    <div>
+                        <div>気になったクルマをブックマークできる</div>
+                        <div>ブックマーク登録しておけば、いつでもすぐ見返すことができます。</div>
+                        <div>お気に入りのクルマを探す</div>
+                    </div>
+                    <div>
+                        <img/>
+                    </div>
+                </div>
+
+                <div>
+                    保存した見積り
+                </div>
+                
+
                 {
                     bookmarks && bookmarks.length > 0 ? 
                     bookmarks.map((bookmark: SavedBookMark) => (
                         <div key={bookmark.id} className="riseup-bookmark-item">
+                            <div> 
+                                <img src={images[`${ bookmark.imgname  }`]} alt="Car" className="riseup-bookmark-image" />
+                            </div>
                             <p>Car ID: {bookmark.carid}</p>
                             <p>color id: {bookmark.color_id}</p>
                             {/* <p>Plan: {bookmark.plan.map((p: any) => p.name).join(", ")}</p> */}
@@ -162,10 +258,6 @@ const RiseUpMenu = () => {
                             <button onClick={() =>navigate(`/carplan?carId=${bookmark.carid}&bookmark=${bookmark.id}`) } className="riseup-menu-button">この料金見積りをする</button>
                             <button onClick={() => deleteBookmarks(bookmark.id)} className="riseup-menu-button">Delete Bookmark</button>
                         </div>
-
-
-
-
 
                         
                     )) 

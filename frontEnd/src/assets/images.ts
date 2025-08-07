@@ -20,9 +20,10 @@ import rearfrontdriverecorder from './estimateplan/interiorexterior/rearfrontdri
 import numberframeset from './estimateplan/interiorexterior/numberframeset.jpg';
 import sixteeninchestire from './estimateplan/interiorexterior/16inchestire.jpg';
 import degitalkey from './estimateplan/interiorexterior/degitalkey.jpg';
-
+import yaris_interior_ex from './estimateplan/interiorcolor/yaris_interior_ex.png';
 
 import prefferednumbeplate from './estimateplan/numberplate/prefferednumberplate.png';
+import kintocarplan_footerlogo from './estimateplan/kintocarplan_footerlogo.png'
 
 export const images : { [key: string]: any} = {
     "yaris_x": defaultX,
@@ -46,5 +47,11 @@ export const images : { [key: string]: any} = {
     "numberframeset" : numberframeset,
     "16inchestire" : sixteeninchestire,
     "degitalkey" : degitalkey,
-    "preferrednumberplate" : prefferednumbeplate
+    "preferrednumberplate" : prefferednumbeplate,
+
+    "yaris_interior_ex": yaris_interior_ex,
+
+
+
+    "kintocarplan_footerlogo": kintocarplan_footerlogo
 };

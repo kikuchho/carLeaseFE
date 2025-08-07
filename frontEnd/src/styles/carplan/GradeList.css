@@ -1,0 +1,163 @@
+.filter-option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+
+.gradelist-border{
+    border: 0.1px solid #f8f8f8;
+    width: 100%;
+    
+   
+}
+
+.grade-list-checkmark {
+    border: 1px solid #000000;
+    background-color: #00708d;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grade-list-unchekced {
+    width: 20px;
+    height: 20px;
+    
+    border: 1px solid #000000;
+}
+
+
+.filter-button{
+    border: 1px solid #ccc;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 20px;
+    width: 200px;
+    height: 40px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.filter-button:hover {
+  background-color: #f0f0f0;
+}
+
+.grades-container{
+    padding-bottom: 10px;
+    gap: 10px;
+}
+
+.grade-item {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px ;
+    margin-bottom: 20px;
+}
+
+.grade-main-info {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.grade-price-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+   padding: 20px;
+}
+
+.grade-type {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.grade-type-selected{
+    color:#00708d;
+    
+}
+
+.grade-type-gasandtire {
+  
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 20px;
+    background-color:#f0f0f0;
+}
+
+.grade-type-gasandtire-selected {
+ 
+  background-color: white;
+}
+
+
+
+
+.filter-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.result-count {
+  
+  text-align: center;
+  display: flex;
+  color: #000000;
+}
+
+
+.btn-apply{
+  color: white;
+  background-color: #00708d;
+
+  width: 130px;
+  height: 40px;
+  border-radius: 20px;
+}
+
+.btn-apply:hover {
+  opacity: 0.8;
+  border: none;
+}
+
+.btn-reset {
+  color: #00708d;
+  background-color: white;
+  width: 130px;
+  height: 40px;
+  border-radius: 20px;
+}
+
+.btn-reset:hover {
+  opacity: 0.8;
+  border: none;
+}

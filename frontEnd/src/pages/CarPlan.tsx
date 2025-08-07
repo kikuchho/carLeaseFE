@@ -7,6 +7,9 @@ import CarPlanHeader from "../components/carPlan/CarPlanHeader";
 import { images } from "../assets/images";
 import FixedFooterCarPay from "../components/carPlan/FixedFooterCarPay";
 import { FaCheck } from "react-icons/fa6";
+import GradeList from "../components/carPlan/gradelist";
+import FreeUpFrontFee from "../components/carPlan/FreeUpFrontFee";
+
 
 // REMINDER ! 
 //1 TTHIS PAGE IS WRAPPED IN PROTECTED ROUTE COMPONENT
@@ -16,7 +19,9 @@ import { FaCheck } from "react-icons/fa6";
 //THE PROTECTED ROUTE IS WRAPPING THE RETURN STATMENT IN HERE 
 //2  : NAME IN MODELS SUCH AS GRADELISt AND COLOR ARE USSED TO IDENTIFY THE IMAGE PATHS 
 // OR TO SIGNIFY THAT IT IS ONLY AVAILABLE FOR CERTAIN GRADE OF THE CAR 
-
+//3 : FOR COLOR IN JSON DATA, IF SUBNAME IS NONE , THEN THE SUBNAME WILL NOT BE SHOWN 
+//4 : css class "optionselected" is being used in other component even though it is defined in the carplan.css
+ 
 interface gradelist
 {
     id: number;
@@ -138,13 +143,13 @@ export interface SavedBookMark
     created_at: string;
     grade_id: number;
     imgname: string;
-    interior_exterior_upgrade_id: number;
+    interior_exterior_upgrade_ids: number[];
     interior_id: number;
     numberplate_number: string;
     option_package_id: number;
     option_package_listitems: option_packages;
     plan: Plan[];
-    tire_upgrade_id: number;
+    tire_upgrade_ids: number[];
     updated_at: string;
 }
 
@@ -189,8 +194,9 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
     //    ...
     // }[];
     
-    const [selectedInteriorExteriorUpgrade, setSelectedInteriorExteriorUpgrade] = useState<interiorExteriorUpgrade | null>(null);
-    const [selectedTireUpgrades, setSelectedTireUpgrade] = useState<tireUpgrade | null>(null);
+    // array of id of interiorExteriorUpgrade
+    const [selectedInteriorExteriorUpgrade, setSelectedInteriorExteriorUpgrade] = useState<number[] | null>(null);
+    const [selectedTireUpgrades, setSelectedTireUpgrades] = useState<number[] | null>(null);
     const [selectedNumberPlates, setSelectedNumberPlates] = useState<numberPlate | null>(null);
     const [numberplateNumber, setNumberplateNumber] = useState<string>("");
     const [numberPlateOptionClicked, setNumberPlateOptionClicked] = useState<boolean>(false);
@@ -286,19 +292,33 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                 
             }
 
-            if(bookmarkId !== "-1" && bookmark?.interior_exterior_upgrade_id){
-                const foundInteriorExteriorUpgrade = carOptions.interior_exterior_upgrades.find(upgrade => upgrade.id === bookmark.interior_exterior_upgrade_id);
-                if (foundInteriorExteriorUpgrade) {
-                    setSelectedInteriorExteriorUpgrade(foundInteriorExteriorUpgrade);
-                }
+            if(bookmarkId !== "-1" && bookmark?.interior_exterior_upgrade_ids && bookmark.interior_exterior_upgrade_ids.length > 0){
+
+
+                 // Filter out all interior/exterior upgrades that match IDs in the bookmark array
+                const matchingUpgradeIds = carOptions.interior_exterior_upgrades
+                    .filter(upgrade => bookmark.interior_exterior_upgrade_ids.includes(upgrade.id))
+                    .map(upgrade => upgrade.id);
+
+                
+                    if (matchingUpgradeIds.length > 0) {
+                        setSelectedInteriorExteriorUpgrade(matchingUpgradeIds);
+                    }
             }
 
-            if(bookmarkId !== "-1" && bookmark?.tire_upgrade_id){
-                const foundTireUpgrade = carOptions.tire_upgrades.find(tire => tire.id === bookmark.tire_upgrade_id);
-                if (foundTireUpgrade) {
-                    setSelectedTireUpgrade(foundTireUpgrade);
-                }
+            if(bookmarkId !== "-1" && bookmark?.tire_upgrade_ids && bookmark.tire_upgrade_ids.length > 0){
+                 // Filter out all interior/exterior upgrades that match IDs in the bookmark array
+                const matchingTireIds = carOptions.tire_upgrades
+                    .filter(tire => bookmark.tire_upgrade_ids.includes(tire.id))
+                    .map(tire => tire.id);
+
+                
+                    if (matchingTireIds.length > 0) {
+                        setSelectedTireUpgrades(matchingTireIds);
+                    }
             }
+
+
             if(bookmarkId !== "-1" && bookmark?.numberplate_number){
                 setNumberplateNumber(bookmark.numberplate_number);
             }
@@ -335,10 +355,16 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         if (selectedOptionPackage) totalPrice += bookmarkedlisteditem?.price || 0  
        
         if (selectedInteriorExteriorUpgrade){
-            totalPrice += selectedInteriorExteriorUpgrade.price;
+            totalPrice += selectedInteriorExteriorUpgrade.reduce((sum, upgradeId) => {
+                const upgrade = carOptions.interior_exterior_upgrades.find(u => u.id === upgradeId);
+                return sum + (upgrade ? upgrade.price : 0);
+            }, 0);
         } 
         if (selectedTireUpgrades){
-            totalPrice += selectedTireUpgrades.price;
+            totalPrice += selectedTireUpgrades.reduce((sum, tireId) => {
+                const tire = carOptions.tire_upgrades.find(t => t.id === tireId);
+                return sum + (tire ? tire.price : 0);
+            }, 0);
         }
         if (selectedNumberPlates){
             totalPrice += selectedNumberPlates.price;
@@ -409,30 +435,34 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                     bonusPayment: plan.bonusPayment || '0'
                 }));
 
+                const interiorExteriorUpgradeIds : number[] = [] ;
+
+                console.log(response.interior_exterior_upgrade_ids + " !!!!!!!!!!!!is response.interior_exterior_upgrade_id");
+
                 const bookmarktemp: SavedBookMark = {
                     id: response.id,
                     author: response.author,
                     carid: response.carid,
-                    isupFrontFee: false,
+                    isupFrontFee: response.is_upFrontFee, // true for initial fee free plan, false for cancellation fee free plan
                     color_id: response.color_id,
                     contract_year: response.contract_year,
                     created_at: response.created_at,
                     grade_id: response.grade_id,
                     imgname: response.imgname,
-                    interior_exterior_upgrade_id: response.interior_exterior_upgrade_id,
+                    interior_exterior_upgrade_ids: response.interior_exterior_upgrade_ids,
                     interior_id: response.interior_id,
                     numberplate_number: response.numberplate_number,
                     option_package_id: response.option_package_id,
                     option_package_listitems: response.option_package_listitems,
                     plan: PlanTemp,
-                    tire_upgrade_id: response.tire_upgrade_id,
+                    tire_upgrade_ids: response.tire_upgrade_ids,
                     updated_at: response.updated_at,
                     
                 };
 
                 setBookmark(bookmarktemp);
 
-                 console.log("savedbookmark response are " , bookmarktemp.plan[0].contractTermLength);
+                 console.log("savedbookmark response are " , bookmarktemp.interior_exterior_upgrade_ids);
             })
             .catch((err) => { console.log(err); });
 
@@ -475,9 +505,18 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         const plan = [
                 {"plan_id": 1,  "contractTermLength" : `${contractTerm}`, "bonusPayment": `${bonusPayment}`},
         ]
+
+        if( selectedInteriorExteriorUpgrade && selectedInteriorExteriorUpgrade.length > 0) {
+            let selectedInteriorExteriorUpgradeTemp : any = [];
+            console.log(selectedInteriorExteriorUpgrade + " is selectedInteriorExteriorUpgrade!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            for (let i = 0; i < selectedInteriorExteriorUpgrade.length; i++) {
+               
+            }
+        }
+       
         const contract_year = 2015 
         const carid = carOptions?.id || 0; 
-        const imgname = carOptions?.imgname || ""; 
+        const imgname = `${selectedGrade?.name}_${selectedColor?.name}` || ""; 
         const is_upFrontFee = isUpFrontFee; // true for initial fee free plan, false for cancellation fee free plan
         const grade_id = selectedGrade?.id || 0;
         const color_id = selectedColor?.id || 0; 
@@ -485,15 +524,15 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         //option_package_id is not the id of the option_package_listitems, it is the that hold it
         const option_package_id = selectedOptionPackage?.id || 0; 
         const option_package_listitems = selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid) || { id: 1, item: "error", price: 0, url: "error" }; // Ensure option_package_listitems is an object with default values
-        const interior_exterior_upgrade_id = selectedInteriorExteriorUpgrade?.id || 0; 
-        const tire_upgrade_id = selectedTireUpgrades?.id || 0; // Ensure tire_upgrade_id is a number, default to 0 if undefined
+        const interior_exterior_upgrade_ids = selectedInteriorExteriorUpgrade || []; // Ensure interior_exterior_upgrade_ids is an array, default to empty array if undefined
+        const tire_upgrade_ids = selectedTireUpgrades || []; // Ensure tire_upgrade_id is a number, default to 0 if undefined
 
         
         const numberplate_number = numberplateNumber || ""; // Ensure numberplate_number is a string, default to empty string if undefined
         
         
 
-        api.post("api/bookmarks/", { plan, contract_year, carid,imgname, is_upFrontFee, grade_id, color_id, interior_id,option_package_id, option_package_listitems ,interior_exterior_upgrade_id,tire_upgrade_id, numberplate_number }).then((res) => {
+        api.post("api/bookmarks/", { plan, contract_year, carid,imgname, is_upFrontFee, grade_id, color_id, interior_id,option_package_id, option_package_listitems ,interior_exterior_upgrade_ids,tire_upgrade_ids, numberplate_number }).then((res) => {
             if( res.status === 201) {
                 alert("Bookmark created successfully");
                
@@ -506,14 +545,6 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
     }
 
     
-    
-
-
-
-    
-
-
-
 
 
     return (
@@ -540,132 +571,154 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                 </div>
                 {/* car details */}
                 <div>
-                    <p>見積り</p>
+
+                    <h2 style={{paddingTop: "100px"}}>見積り</h2>
 
 
 
                     {carOptions ? (
                         <div>
-                            
-                            <h2>{carOptions.name}</h2>
-                            <p>Price: {carOptions.price} JPY</p>   
+                            <div className="car-top-title">
+                                <h4>{carOptions.name}</h4>
+                                <div style={{fontSize: "12px"}}> ※価格は全て税込表示です </div>
+                            </div>
+                           
+                              
 
-                            <h3>プラン選択:</h3>
-                            <div>
-                                <button className={ isUpFrontFee  === true ? "option-selected" : ""} onClick={()=>{setIsUpFrontFee(true)}} >
-                                    初期費用フリープラン
-                                </button>
-                                <button onClick={()=>{  
+                            <h4>プランの選択</h4>
+                            <div className="plan-options-container">
+                                <div className={`plan-options-container-item ${isUpFrontFee  === true ? "option-selected" : "" }` } 
+                                onClick={()=>{setIsUpFrontFee(true)}} 
+                                style={{"color": "#00a65e"}}
+                                >
+                                    <div>初期費用</div>
+                                    <div> フリープラン  </div>
+                                </div>
+                                <div onClick={()=>{  
                                     setIsUpFrontFee(false)
                                     setContractTerm(3)
                                     setBonusPayment(0)
-                                    } } className={ isUpFrontFee  === false ? "option-selected" : ""}>
-                                    解約金フリープラン
-                                </button>
+                                    } } 
+                                    style={{"color": "#00708d"}}
+                                    className={` plan-options-container-item ${isUpFrontFee  === false ? "option-selected" : ""}  `  } >
+                                    <div>解約金</div>
+                                    <div>  フリープラン </div>
+                                </div>
                             </div>
 
 
-                            {
-                                isUpFrontFee ? (
-                                    <div>
-                                        ご契約期間
-                                    <button className={contractTerm === 3? "option-selected" : ""} onClick={() => {  return (setContractTerm(3) ) } }>
-                                        3年
-                                    </button>
-                                    <button className={contractTerm === 5? "option-selected" : ""} onClick={() =>{  return (setContractTerm(5) ) }    }>
-                                        5年
-                                    </button>
-                                    <button className={contractTerm === 7? "option-selected" : ""} onClick={() => {  return (setContractTerm(7) ) } }>
-                                        7年
-                                    </button>
+                           {/* ご契約期間　ボーナス月加算額 */}
+                            <FreeUpFrontFee
+                            contractTerm={contractTerm}
+                            setContractTerm={(contractTerm) =>  setContractTerm(contractTerm)}
+                            bonusPayment={bonusPayment}
+                            setBonusPayment={setBonusPayment}
+                            isUpFrontFee={isUpFrontFee}
+                            />
 
-                                    ボーナス月加算額
-                                    <button className={bonusPayment === 0? "option-selected" : ""} onClick={() => setBonusPayment(0)}>
-                                        なし
-                                    </button>
-                                    <button className={bonusPayment === 55000? "option-selected" : ""} onClick={() => setBonusPayment(55000)}>
-                                        5.5万円 
-                                    </button>
-                                    <button className={bonusPayment === 110000? "option-selected" : ""} onClick={() => setBonusPayment(110000)}>
-                                        11万円
-                                    </button>
-                                    </div>
-                                        
-                                ) : (
-                                    <div>
-                                        ご契約期間
-                                        <button className={contractTerm === 3? "option-selected" : ""} onClick={() => {  return (setContractTerm(3) ) } }>
-                                            3年
-                                        </button>
-                                    </div>
-                                   
-                                )
-                            }
-
+                           {/* グレード選択: */}
+                            <GradeList 
+                            grades={carOptions.grades}
+                            selectedGrade={selectedGrade}
+                            setSelectedGrade={(grade) => {
+                                setSelectedGrade(grade);
+                                setImagePath(grade.name || ""); // Set image path based on grade name
+                            }}
+                            isUpFrontFee={isUpFrontFee}
+                            monthlyPayment={monthlyPayment}
+                            calculateUpFrontFee={calculateUpFrontFee}
+                            />
+                            
                            
-
-
-
-
-
-                            <h3>グレード選択:</h3>
-                            <ul>
-                                {carOptions.grades.map((grade) => (
-                                    <li key={grade.id}
-                                        className={selectedGrade?.id === grade.id ? "option-selected" : ""}
-                                        onClick={() => {
-                                            setSelectedGrade(grade)
-                                            
-                                            setImagePath(grade.name || ""); // Set image path based on grade name
-                                        }}
-                                        
-                                    >
-                                        
-                                        {grade.grade} - {grade.name} - {grade.gasType} - {grade.wheelDrive} - Price: {grade.price} JPY - upfrontfee { !isUpFrontFee   ? <div> {calculateUpFrontFee(monthlyPayment, grade.price )} </div> : <div></div>}
-                                    </li>
-                                ))}
-                            </ul>
-
                             
                             <h3>カラー選択:</h3>
-                            <ul>
-                                {carOptions.colors.map((color) => (
-                                    <li key={color.id} style={{ color: color.color_hex }}
-                                        className={selectedColor?.id === color.id ? "option-selected" : ""}
+                            <div>
+
+
+                                <div>  {selectedColor?.color}  </div>
+                                <div className="car-color-image-container">  
+
+                                    {carOptions.colors.map((color) => (
+
+                                    <div key={color.id} 
+                                       className="color-option-item"
                                         onClick={() => {
                                             setSelectedColor(color)
                                             setImagePath(`${selectedGrade?.name}_${color.name}`|| ""); 
                                         
                                         }}
                                     >
-                                        {color.name} - {color.color} - {color.subname} - Price: {color.price} JPY - upfrontfee { !isUpFrontFee   ? <div> {calculateUpFrontFee(monthlyPayment, color.price )} </div> : <div></div>}
-                                        
-                                    </li>
-                                ))}
-                            </ul>
+                                        <div>
+                                            {
+                                                color.subname && color.subname !== "none" ? (
+                                                    <div className="color-subname"> {color.subname} </div>
+                                                ) : (
+                                                    <div className="color-subname-empty"></div>
+                                                )
+                                            }
+                                            
+                                            <div className={` outercolorsample ${selectedColor?.id === color.id ? "selected-color" : ""}  ` }  >  <div className="innercolorsample" style={{ backgroundColor: color.color_hex }}> </div>  </div>
+                                            <div className="color-price-info"> 
+                                               <div>月額 +{color.price} 円  </div>
+                                               { !isUpFrontFee   ? <div>申込金 +{calculateUpFrontFee(monthlyPayment, color.price )} 円</div> : <div></div>}
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    ))}
+                                </div>
+                                
+                            </div>
+                               
+                            
 
                             <h3>インテリアカラー</h3>
-                            <ul>
+                            
                                 {carOptions.interiors.length > 0 ? (
                                     carOptions.interiors.map((interior, index) => (
-                                        <li key={index}
-                                        className={selectedInterior?.id === interior.id ? "option-selected" : ""}
-                                        onClick={() => setSelectedInterior(interior)}
-                                        >{interior.seat} - Price: {interior.price} JPY -upfrontfee { !isUpFrontFee   ? <div> {calculateUpFrontFee(monthlyPayment, interior.price )} </div> : <div></div>}  </li>
+                                        <div key={index}
+                                       
+                                        >
+                                        
+                                        <div>
+                                            <img className="interior-img" src={images[`${interior.imgname}`] || images["no_image_option"]} alt={interior.interior} />
+                                        </div>
+                                        <div> 表記凡例 内装色：基調色（差し色）、シート：素材・カラー </div>
+
+                                        <div style={{ display: "flex", flexDirection: "row" , justifyContent: "space-between", alignItems: "center", padding: "10px", marginTop: "30px", marginBottom: "30px"}} 
+                                            className={selectedInterior?.id === interior.id ? "option-selected" : ""}
+                                            onClick={() => setSelectedInterior(interior)}
+                                        >
+                                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                                <div> 内装色 : {interior.interior}    </div>
+                                                <div> シート : {interior.seat}   </div>
+                                            </div>
+                                            
+                                            <div style={{ textAlign: "end", width: "150px", height: "auto", display: "flex", flexDirection: "column", justifyContent: "end", fontSize: "13px" }}>
+                                                <div>月額＋{interior.price} 円</div>
+                                                <div style={{  display: "flex", flexDirection: "row", justifyContent: "flex-end" }}> { !isUpFrontFee   ? <div >申込金＋ {calculateUpFrontFee(monthlyPayment, interior.price )} 円</div> : <div></div>}  </div>
+                                            </div>
+
+                                        </div>
+
+                                        
+                                            
+                                        
+                                        </div>
                                     ))
                                 ) : (
                                     <li>インテリアカラーはありません。</li>
                                 )}
-                            </ul>
+                            
 
                             <h3>KINTOオプションパッケージ</h3>
                             {
                                 carOptions.option_packages.length > 0 ? (
-                                    <ul>
+                                    <div>
                                         {carOptions.option_packages.map((option) => (
-                                            <li 
+                                            <div
                                             key={option.id}
-                                            className={`${selectedOptionPackage?.id === option.id ? "option-selected" : "" }     `}
+                                            style={{marginBottom: "10px"}}
+                                            className={` ${selectedOptionPackage?.id === option.id ? "option-selected-optionpackage" : "optiondeselected" }     `}
                                             onClick={() => {
                                                 // Only set the package and default list item if it's not already selected
                                                 if (selectedOptionPackage?.id !== option.id) {
@@ -674,48 +727,109 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                                                 }
                                             }}
                                             >
-                                                <h4>{option.title}</h4>
+                                                <div className="optionpackage-title">
+                                                    <h4>{option.title}</h4>
+                                                    <div style={{width: "190px", textAlign: "end", paddingRight: "10px"}}> 月額+ {option.price}円～  { !isUpFrontFee   ? <div>申込金+ {calculateUpFrontFee(monthlyPayment, option.price )} 円～</div> : <div></div>}     </div>
+                                                </div>
+                                               
                                                 
                                                 <p>{option.subtitle.map((title, index) => {
-                                                    return <span key={index}>{title}  </span>
+                                                    return <span style={{paddingLeft: "10px"}} key={index}>{title}  </span>
                                                 }   )}</p>
 
-                                                <div>{option.price}円 -upfrontfee { !isUpFrontFee   ? <div> {calculateUpFrontFee(monthlyPayment, option.price )} </div> : <div></div>} </div>
+                                               
                                                 <div className={`${selectedOptionPackage?.id === option.id ? "show" : "hide" }`}>
-                                                    <ul>
+
+                                                  
+
+                                                    <div>
                                                         {
                                                         
                                                             option.listItems.map((item, index) => (
-                                                            <li key={index}
+                                                            <div key={index}
 
-                                                            className={`${selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.id === item.id ? "option-selected" : ""} 
-                                                                        ${!isOptionDetailClicked ? (selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.id === item.id ? "show" : "hide"): ""} `} 
+                                                            className={`
+                                                                        ${selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.id === item.id ? "show" : "hide"}
+                                                                        `} 
                                                             onClick={() => {
                                                                 setSelectedOptionPackagelistid(item.id)
-                                                                setIsOptionDetailClicked(false)
+                                                                //setIsOptionDetailClicked(false)
                                                             }}
                                                             >
-                                                                <img className="optionpackageimg" src={images[`${item.url}`] || images["no_image_option"]} alt={option.title} />
-                                                                {item.item} - Price: {item.price}  JPY -upfrontfee { !isUpFrontFee   ? <div> {calculateUpFrontFee(monthlyPayment, item.price )} </div> : <div></div>} - {item.url}
-                                                            </li>
+                                                                
+                                                                <div className="optionselecteditem">
+                                                                    <div>
+                                                                        <div style={{fontSize: "13px", fontWeight: "bold", paddingBottom: "10px"}}> {option.name}  </div>
+                                                                        <img className="optionpackageimg" src={images[`${item.url}`] || images["no_image_option"]} alt={option.title} />
+                                                                    </div>
+                                                                    
+                                                                    {item.item} 
+                                                                    <button className={"optiondetailbutton"} onClick={()=>setIsOptionDetailClicked(!isOptionDetailClicked)} > 変更 </button>
+                                                                </div>
+                                                                
+                                                            </div>
                                                             ))
                                                         
-                                                    }
+                                                        }
+                                                            {/* below will be shown when user clicks button "変更" */}
+                                                        {
+                                                            isOptionDetailClicked ?
+                                                            <div className="optionselectitem-container" >
+                                                                {
+                                                                  option.listItems.map((item, index) => (
+                                                                    <div key={index}
+
+                                                                    className={`optionselectitem
+                                                                                ${isOptionDetailClicked === true && selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.id === item.id ? "option-selected" : ""} 
+                                                                                ${!isOptionDetailClicked ? (selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.id === item.id ? "show" : "hide"): ""} `} 
+                                                                    onClick={() => {
+                                                                        setSelectedOptionPackagelistid(item.id)
+                                                                        setIsOptionDetailClicked(false)
+                                                                    }}
+                                                                    >
+                                                                    <div className="optionselecteditem">
+                                                                        
+                                                                           
+                                                                        <img style={{paddingTop: "10px"}}  className="optionpackageimg-sub" src={images[`${item.url}`] || images["no_image_option"]} alt={option.title} />
+                                                                        
+                                                                        <div>
+                                                                            {item.item} 
+                                                                        </div>
+                                                                        <div>
+                                                                            
+                                                                                
+                                                                            <div style={{width: "170px", textAlign: "end", fontSize:"12px"}}> 月額+ {option.price}円～  { !isUpFrontFee   ? <div>申込金+ {calculateUpFrontFee(monthlyPayment, option.price )} 円～</div> : <div></div>}     </div>
+                                                                            
+                                                                        </div>
+                                                                        
+                                                                       
+                                                                    </div>
+                                                                    </div>
+                                                                    ))   
+                                                                }
+                                                                
+                                                                
+                                                            </div>
+                                                            :
+                                                            <div> 
+
+                                                            </div>
+                                                        }
                                                        
-                                                    </ul>
-                                                    <button onClick={()=>setIsOptionDetailClicked(!isOptionDetailClicked)} > 変更 </button>
+                                                    </div>
+                                                  
 
                                                 </div>
                                                 
-                                            </li>
+                                            </div>
                                         ))}
-                                    </ul>
+                                    </div>
                                 ) : (
                                     <p>オプションパッケージはありません。</p>
                                 )
                             }
 
-                            <h3>追加いただける単品オプション</h3>
+                            <h4 style={{paddingTop: "15px", paddingBottom: "15px"}}>追加いただける単品オプション</h4>
                             {
                                 carOptions.interior_exterior_upgrades.length > 0 ? (
                                     <>
@@ -729,30 +843,46 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                                             <div className={upgrade.is_exterior ? "show" : "hide"}>  
                                                 <div key={index} 
                                                     // any row (entry) that has "all" in name field will always be shown  
-                                                    className={ `${selectedInteriorExteriorUpgrade?.id === upgrade.id ? "option-selected" : ""}
+                                                    className={ `
                                                                 ${ (upgrade.name === "all") ? `show`: ((upgrade.name === selectedGrade?.name) ? `show` : `hide`)   }
                                                                 interiorexteriorupgrade-option
                                                                 `}
 
                                                     onClick={() => {
                                                         //click to select or deselect the upgrade
-                                                        if(upgrade === selectedInteriorExteriorUpgrade) {
-                                                            setSelectedInteriorExteriorUpgrade(null)
+                                                        if(selectedInteriorExteriorUpgrade?.includes(upgrade.id)) {
+                                                            setSelectedInteriorExteriorUpgrade(
+                                                                selectedInteriorExteriorUpgrade.filter(id => id !== upgrade.id)
+                                                            )
                                                         } else {
-                                                            setSelectedInteriorExteriorUpgrade(upgrade)
+                                                            setSelectedInteriorExteriorUpgrade(
+                                                                selectedInteriorExteriorUpgrade ? [...selectedInteriorExteriorUpgrade, upgrade.id] : [upgrade.id]
+                                                            )
                                                         }
                                                         
                                                         }}
                 
                                                 >   
-                                                    <div className="interiorexterior-item"> 
-                                                        <img className="interiorexteriorupgrade-img" src={images[`${upgrade.imgurl}`] || images["no_image_option"]} alt={upgrade.Interior_exterior_upgrade} />
 
-                                                        <div className={upgrade.is_exterior && selectedInteriorExteriorUpgrade?.id === upgrade.id ? "show" : "hide"}> <div className="interiorexterior-check"> <FaCheck color="white" />  </div>   </div>
-                                                        <p>{upgrade.Interior_exterior_upgrade}</p>
-                                                        <p>Price: {upgrade.price} JPY</p>
+
+                                                  
+                                                     <div className="interiorexterior-item"> 
+                                                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                            <img className="interiorexteriorupgrade-img" src={images[`${upgrade.imgurl}`] || images["no_image_option"]} alt={upgrade.Interior_exterior_upgrade} />
+                                                            <p>{upgrade.Interior_exterior_upgrade}</p>
+                                                        </div>
+                                                       
+                                                        
+                                                        <div className="interiorexteriorupgrade-container1">
+                                                            <div className="price-container" style={{ width: "150px", fontSize: "13px" }}>
+                                                                <div className={ `  `}>  月額＋ {upgrade.price} 円  </div>
+                                                                <div style={{  display: "flex", flexDirection: "row" }}> { !isUpFrontFee   ? <div>申込金＋ {calculateUpFrontFee(monthlyPayment, upgrade.price )} 円</div> : <div></div>}  </div>
+                                                            </div>
+
+                                                            <div className={ ` checkbox   ${upgrade.is_exterior && selectedInteriorExteriorUpgrade?.includes(upgrade.id) ? "checked" : ""} `}>  <FaCheck color="white" />   </div>
+                                                        </div>
+                                                        
                                                     </div>
-
                                                     {/* <p>{upgrade.name}</p>
                                                     
                                                     <p>{upgrade.is_exterior ? "内外装向上" : "快適･利便性向上"}</p> */}
@@ -775,30 +905,43 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                                             <div className={!upgrade.is_exterior ? "show" : "hide"}>  
                                                 <div key={index} 
                                                     // any row (entry) that has "all" in name field will always be shown  
-                                                    className={ `${selectedInteriorExteriorUpgrade?.id === upgrade.id ? "option-selected" : ""}
+                                                    className={ `
                                                                 ${ (upgrade.name === "all") ? `show`: ((upgrade.name === selectedGrade?.name) ? `show` : `hide`)   }
                                                                 interiorexteriorupgrade-option
                                                             `}
 
                                                     onClick={() => {
                                                         //click to select or deselect the upgrade
-                                                        if(upgrade === selectedInteriorExteriorUpgrade) {
-                                                            setSelectedInteriorExteriorUpgrade(null)
+                                                        if(selectedInteriorExteriorUpgrade?.includes(upgrade.id)) {
+                                                            setSelectedInteriorExteriorUpgrade(
+                                                                selectedInteriorExteriorUpgrade.filter(id => id !== upgrade.id)
+                                                            )
                                                         } else {
-                                                            setSelectedInteriorExteriorUpgrade(upgrade)
+                                                            setSelectedInteriorExteriorUpgrade(
+                                                                selectedInteriorExteriorUpgrade ? [...selectedInteriorExteriorUpgrade, upgrade.id] : [upgrade.id]
+                                                            )
                                                         }
-                                                        
                                                         }}
                 
                                                 >
                                                    
 
                                                     <div className="interiorexterior-item"> 
-                                                        <img className="interiorexteriorupgrade-img" src={images[`${upgrade.imgurl}`] || images["no_image_option"]} alt={upgrade.Interior_exterior_upgrade} />
+                                                        <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                            <img className="interiorexteriorupgrade-img" src={images[`${upgrade.imgurl}`] || images["no_image_option"]} alt={upgrade.Interior_exterior_upgrade} />
+                                                            <p>{upgrade.Interior_exterior_upgrade}</p>
+                                                        </div>
+                                                       
+                                                        
+                                                        <div className="interiorexteriorupgrade-container1">
+                                                            <div className="price-container" style={{ width: "150px", fontSize: "13px" }}>
+                                                                <div className={ `  `}>  月額＋ {upgrade.price} 円  </div>
+                                                                <div style={{  display: "flex", flexDirection: "row" }}> { !isUpFrontFee   ? <div>申込金＋ {calculateUpFrontFee(monthlyPayment, upgrade.price )} 円</div> : <div></div>}  </div>
+                                                            </div>
 
-                                                         <div className={!upgrade.is_exterior &&selectedInteriorExteriorUpgrade?.id === upgrade.id ? "show" : "hide"}> <div className="interiorexterior-check"> <FaCheck color="white" />  </div>  </div>
-                                                        <p>{upgrade.Interior_exterior_upgrade}</p>
-                                                        <p>Price: {upgrade.price} JPY</p>
+                                                            <div className={ ` checkbox   ${!upgrade.is_exterior && selectedInteriorExteriorUpgrade?.includes(upgrade.id) ? "checked" : ""} `}>  <FaCheck color="white" />   </div>
+                                                        </div>
+                                                        
                                                     </div>
 
                                                 </div>
@@ -813,66 +956,119 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                                 )
                             }
 
-                            <h3>寒冷地仕様・冬タイヤ</h3>
+                            <h4 style={{paddingTop: "15px", paddingBottom: "15px"}}>寒冷地仕様・冬タイヤ</h4>
                             {
                                 carOptions.tire_upgrades.length > 0 ? (
-                                    <ul>
+                                    <div>
                                         {carOptions.tire_upgrades.map((tire, index) => (
                                             
-                                            <li key={tire.id}
-                                                className={selectedTireUpgrades?.id === tire.id ? "option-selected" : ""}
+                                            <div key={tire.id}
+                                                className={"tireupgrade-item"}
                                                 onClick={() => {
-                                                if(tire === selectedTireUpgrades) {
-                                                    setSelectedTireUpgrade(null)
+                                                if(selectedTireUpgrades?.includes(tire.id)) {
+                                                    setSelectedTireUpgrades(
+                                                        selectedTireUpgrades.filter(id => id !== tire.id)
+                                                    )
                                                 } else {
-                                                    setSelectedTireUpgrade(tire)
+                                                    setSelectedTireUpgrades(
+                                                        selectedTireUpgrades ? [...selectedTireUpgrades, tire.id] : [tire.id]
+                                                    )
                                                 }
                                                 
                                                 }}
-                                            >
-                                                <h4>{tire.Tire_upgrade}</h4>
-                                                <p>{tire.title}</p>
-                                                <p>{tire.description}</p>
-                                                <p>Price: {tire.price} JPY</p>
+                                                
+                                            >   
+                                                <div className="tireupgrade-container1">  
+                                                    <div style={{ fontSize: "17px" , fontWeight: "bold"  }}>{tire.Tire_upgrade}</div>
 
-                                            </li>
+                                                    <div className="tireupgrade-container2">
+                                                        <div className="price-container">
+                                                            <div>月額＋{tire.price} 円</div>
+                                                            <div style={{  display: "flex", flexDirection: "row" }}> { !isUpFrontFee   ? <div>申込金＋ {calculateUpFrontFee(monthlyPayment, tire.price )} 円</div> : <div></div>}  </div>
+                                                        </div>
+
+                                                        <div className={ ` checkbox   ${selectedTireUpgrades?.includes(tire.id)   ? "checked" : ""} `}>  <FaCheck color="white" />   </div>
+
+                                                    </div>
+                                                    
+                                                    
+                                                    
+                                                </div>
+
+                                                    <div style={ { left: "0px", fontSize: "11px" } }>
+                                                        <div >{tire.description}</div>
+                                                    </div>
+
+                                                <div>
+                                                     
+                                                </div>
+
+                                            </div>
                                         ))}
-                                    </ul>
+                                    </div>
                                 ) : (
                                     <p>寒冷地仕様・冬タイヤはありません。</p>
                                 )
                             }
-                            <h3>希望ナンバー</h3>
+                            <h4 style={{paddingTop: "15px", paddingBottom: "15px"}}>希望ナンバー</h4>
                             {   
                                 carOptions.numberplates.length > 0 ? (
-                                    <ul>
+                                    <div>
                                         {carOptions.numberplates.map((plate) => (
-                                            <li key={plate.id}
-                                            className = {selectedNumberPlates?.id === plate.id ? "option-selected" : ""}
-                                            onClick={() => {
+                                            <div key={plate.id}
+                                            className = {"numberplate-container"}
+                                            
+
+                                            >   
+                                                <div className="numberplate-container2"
+                                                onClick={() => {
                                                 console.log(" numberplate clicked ");
-                                                setNumberPlateOptionClicked(!numberPlateOptionClicked); // Toggle the option clicked state
+                                                setNumberPlateOptionClicked(!numberPlateOptionClicked)
                                                 if(plate === selectedNumberPlates) {
                                                     setSelectedNumberPlates(null)
                                                 } else {
                                                     setSelectedNumberPlates(plate)
                                                 }
                                             }}
-
-                                            >   
                                                 
-                                                <input type="text" value={numberplateNumber} className={` numberplateinput  ${numberplateNumber !== "" || numberPlateOptionClicked === true ? "show" : "hide" }`   } 
-                                                onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{setNumberplateNumber(e.target.value)}} />
-                                                <img className="numberplate-img" src={images[`${plate.imgurl}`] || images["no_image_option"]} alt={plate.title} />
-                                                <div> {plate.title} - Price: {plate.price} JPY </div> 
-                                            </li>
+                                                >
+                                                    <img className="numberplate-img" src={images[`${plate.imgurl}`] || images["no_image_option"]} alt={plate.title} />
+                                                    <div style={{ fontSize: "15px" , width: "150px"  }} className="numberplate-title">
+                                                        {plate.title}
+                                                    </div>
+                                                    <div className="numberplate-container3">
+                                                        <div> 
+                                                            <div>  月額＋ {plate.price} 円 </div> 
+                                                            <div>  { !isUpFrontFee   ? <div> 申込金＋ {calculateUpFrontFee(monthlyPayment, plate.price )} 円 </div> : <div></div>} </div>
+                                                        </div>
+                                                        
+                                                        <div  className={ ` checkbox   ${selectedNumberPlates?.id === plate.id ? "checked" : ""} `}>  <FaCheck color="white" />   </div>
+                                                    </div>
+                                                   
+                                                </div>
+
+                                                <div className={` ${numberplateNumber !== "" || numberPlateOptionClicked === true ? "show" : "hide" }`   }>
+                                                    <div style={{display: "flex", gap: "10px", marginBottom:"10px"}}> <div style={{backgroundColor: "orange", width: "50px" , height:"auto", textAlign: "center", borderRadius: "5px" }}>必須</div> 第一志望 </div>
+                                                    <input type="text" value={numberplateNumber} className={` numberplateinput  ${numberplateNumber !== "" || numberPlateOptionClicked === true ? "show" : "hide" }`   } 
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{setNumberplateNumber(e.target.value)}} />
+                                                    <div style={{fontSize: "12px", color: "gray"}}>
+                                                        ※0からはじまるナンバーを入力された場合は、・で登録されます（例：「0120」⇒「・120」）
+                                                        ※図柄入りプレートや字光式プレートは装着できません。
+                                                        ※抽選対象番号は原則受け付けられませんので、一般社団法人全国自動車標板協議会でご確認ください。
+                                                    </div>
+                                                </div>
+                                               
+                                                
+                                            </div>
                                         ))}
                                     
-                                    </ul>
+                                    </div>
                                 ) : (
                                     <p>希望ナンバーはありません。</p>
                                 )
                             }
+
+                            
                            
                             <FixedFooterCarPay 
                                 monthlypay={monthlyPaymentwithoption}
@@ -882,8 +1078,38 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                                 isUpFrontFee={isUpFrontFee}
                                 upFrontFee={upfrontfee}
                             />
-                            <h3>monthlyPayment {monthlyPayment} yen </h3>
-                            <h3>monthlyPayment with options {monthlyPaymentwithoption} yen </h3>
+
+                            <div className="car-plan-notice">
+                                <div style={{color:"red", fontWeight: "500", marginTop:"50px"}}> 【ご留意ください】 </div>
+                                <div style={{fontSize: "12px"}}>一部の装備のご利用には、別途対応可能なスマートフォンが必要です。
+                                対象となる装備・車種、動作確認済スマートフォンの一覧はこちらからご確認ください。</div>
+                            </div>
+
+
+                            {
+                                isAuthorized ? (
+                                    <div  className="final-step-container">
+                                    <div onClick={createBookmark} className="save-estimate-button">
+                                    見積りを保存する
+                                    </div>
+
+                                    <div className="save-estimate-button rightbutton">
+                                    次へ: 販売店選択
+                                    </div>
+                                    </div>
+                                   
+                                ) : (
+                                    <div onClick={() =>  navigate("/login")  } className="save-estimate-button rightbutton">  
+                                        ログインして見積りを保存する
+                                    </div>
+                                )
+                            }   
+
+
+
+                            <img className="bottombanner" src={images["kintocarplan_footerlogo"]} alt="KINTO Logo" />
+
+
 
                         </div>
                     ) : (
@@ -895,17 +1121,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
             </div>
           
 
-            {
-                isAuthorized ? (
-                    <div onClick={createBookmark} >
-                       見積りを保存する
-                    </div>
-                ) : (
-                    <div onClick={() =>  navigate("/login")  } > 
-                        ログインして見積りを保存する
-                    </div>
-                )
-            }
+           
 
         </div>
         </ProtetecdRoute>
@@ -914,13 +1130,13 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 }
 export default CarPlan;
 
-export const calculateUpFrontFee = ( monthlyPaymentwithoption: number, optionprice? : number): number => {
+export const calculateUpFrontFee = ( monthlyPaymentwithoutoption: number, optionprice? : number): number => {
     //contract term : unit is in years
     //bonus : we asssume that bonus is paid twice a year
     //price : total price of the car
     let upffontfeeTempStep1 = 0; //initial value
     if(optionprice === undefined) {
-        upffontfeeTempStep1 = monthlyPaymentwithoption * 5.6
+        upffontfeeTempStep1 = monthlyPaymentwithoutoption * 5.6
     }else{
         upffontfeeTempStep1 = optionprice * 5.6;
     }
