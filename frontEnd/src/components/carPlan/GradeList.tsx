@@ -5,6 +5,7 @@ import { FaGasPump } from "react-icons/fa";
 import { GiCarWheel } from "react-icons/gi";
 import { FaCheck } from "react-icons/fa6";
 import '../../styles/carplan/GradeList.css'
+import type { CarOption } from '../../pages/CarPlan';
 
 
 
@@ -12,9 +13,11 @@ interface GradeListProps {
   grades: any[]; // Replace with your actual gradelist type
   selectedGrade: any | null;
   setSelectedGrade: (grade: any) => void;
+  setSelectedColor: (color: any) => void;
   isUpFrontFee: boolean;
   monthlyPayment: number;
   calculateUpFrontFee: (monthlyPayment: number, price: number) => number;
+  caroptions: CarOption ; // Optional, if you need car options for image path
 }
 
 
@@ -22,9 +25,11 @@ const GradeList = ({
   grades, 
   selectedGrade, 
   setSelectedGrade, 
+  setSelectedColor,
   isUpFrontFee,
   monthlyPayment,
-  calculateUpFrontFee
+  calculateUpFrontFee,
+  caroptions,
 }: GradeListProps)=> {
 
 const [show, setShow] = useState(false);
@@ -210,7 +215,13 @@ return (
             <div 
               key={grade.id}
               className={`grade-item ${selectedGrade?.id === grade.id ? "option-selected" : ""}`}
-              onClick={() => setSelectedGrade(grade)}
+              onClick={() => 
+              {
+                setSelectedGrade(grade)
+                setSelectedColor(caroptions.colors[0])
+              }
+                
+              }
             >
               <div className="grade-main-info">
                 <span className="grade-name">{grade.grade}</span>

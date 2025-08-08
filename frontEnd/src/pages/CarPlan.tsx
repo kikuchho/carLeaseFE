@@ -110,7 +110,7 @@ interface numberPlate
 
 
 
-interface CarOption 
+export interface CarOption 
 {    
     id: number;  
     name: string; 
@@ -150,6 +150,7 @@ export interface SavedBookMark
     option_package_listitems: option_packages;
     plan: Plan[];
     tire_upgrade_ids: number[];
+    totalprice: number;
     updated_at: string;
 }
 
@@ -165,7 +166,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 
 
 
-    const [imagePath, setImagePath] = useState<string>("yaris_x");
+    const [imagePath, setImagePath] = useState<string>("");
     const [optionpackageImagePath, setOptionPackageImagePath] = useState<string>("no_image_option");
     const [content, setContent] = useState<string | null>(null);
     //bookmark contain a one bookmark object that is fetched from getCarOptionDetail, null if the user came from cardslider component 
@@ -175,6 +176,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
     const [firstRender, setFirstRender] = useState<boolean>(true);
     const [isOptionDetailClicked, setIsOptionDetailClicked] = useState<boolean>(false);
 
+    const [totalcarprice, setTotalcarPrice] = useState<number>(0);
     const [monthlyPayment, setMonthlyPayment] = useState<number>(0);
     const [monthlyPaymentwithoption, setMonthlyPaymentwithOption] = useState<number>(0);
     const [bonusPayment, setBonusPayment] = useState<number>(0); //how much extra money he will pay from his bonus 
@@ -206,6 +208,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         let monthlyPaymentTemp = 0
     if (carOptions) {
 
+    
         
         // Set default selections when car options load
         if (!selectedGrade && carOptions.grades.length > 0) {
@@ -227,6 +230,11 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         //value (set select...) to the value from bookmark at line 156 , whose values were fetched from 
         if(firstRender) {
             let foundGradeTemp : any = null;
+
+            // in caroption.imgname contains a car name such as "yaris, raize" and this default name indicate teh default image for each car
+            setImagePath(`${carOptions.imgname || ""}`); // Set initial image path based on grade and color
+
+
 
             if( bookmarkId !== "-1" && bookmark?.isupFrontFee === false ){
                 setIsUpFrontFee(false);
@@ -373,6 +381,8 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         // Calculate payments
         //const basePayment = calculateMonthlyPayment(carOptions.price, bonusPayment, contractTerm);
         const optionPayment = totalPrice;
+
+        setTotalcarPrice(totalPrice);
         
         console.log(" selectedoptionpackage price " + selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.price);
         console.log("optionPayment is " + optionPayment, "selectedGrade/color/interior.price " + selectedGrade?.price, selectedColor?.price, selectedInterior?.price );
@@ -387,6 +397,16 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 
     //get bookmarks function 
     useEffect(() => {
+        // Reset body styles when page loads
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        
+        if (document.body.dataset.scrollLock) {
+            document.body.dataset.scrollLock = '';
+        }
+
+
         getBookmark();
             //getCarOptionDetail();
 
@@ -456,13 +476,14 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                     option_package_listitems: response.option_package_listitems,
                     plan: PlanTemp,
                     tire_upgrade_ids: response.tire_upgrade_ids,
+                    totalprice: response.totalprice,
                     updated_at: response.updated_at,
                     
                 };
 
                 setBookmark(bookmarktemp);
 
-                 console.log("savedbookmark response are " , bookmarktemp.interior_exterior_upgrade_ids);
+                 console.log("savedbookmark response are " , bookmarktemp.totalprice);
             })
             .catch((err) => { console.log(err); });
 
@@ -526,13 +547,13 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         const option_package_listitems = selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid) || { id: 1, item: "error", price: 0, url: "error" }; // Ensure option_package_listitems is an object with default values
         const interior_exterior_upgrade_ids = selectedInteriorExteriorUpgrade || []; // Ensure interior_exterior_upgrade_ids is an array, default to empty array if undefined
         const tire_upgrade_ids = selectedTireUpgrades || []; // Ensure tire_upgrade_id is a number, default to 0 if undefined
-
+        const totalprice = totalcarprice || 0;
         
         const numberplate_number = numberplateNumber || ""; // Ensure numberplate_number is a string, default to empty string if undefined
         
-        
+        console.log(totalprice + "!!!!!!!!!!!!! is totalprice");
 
-        api.post("api/bookmarks/", { plan, contract_year, carid,imgname, is_upFrontFee, grade_id, color_id, interior_id,option_package_id, option_package_listitems ,interior_exterior_upgrade_ids,tire_upgrade_ids, numberplate_number }).then((res) => {
+        api.post("api/bookmarks/", { plan, contract_year, carid,imgname, is_upFrontFee, grade_id, color_id, interior_id,option_package_id, option_package_listitems ,interior_exterior_upgrade_ids,tire_upgrade_ids, numberplate_number, totalprice }).then((res) => {
             if( res.status === 201) {
                 alert("Bookmark created successfully");
                
@@ -551,7 +572,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         <ProtetecdRoute path="/carplanloggedout">
         <div style={{ height: "3000px"}}>
             <CarPlanHeader />
-            
+            {carOptions ? (
             <div className="car-plan-content"> 
                 {/* carimage */}
                 <div>
@@ -576,7 +597,13 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 
 
 
-                    {carOptions ? (
+                    
+
+
+
+
+
+
                         <div>
                             <div className="car-top-title">
                                 <h4>{carOptions.name}</h4>
@@ -624,9 +651,11 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                                 setSelectedGrade(grade);
                                 setImagePath(grade.name || ""); // Set image path based on grade name
                             }}
+                            setSelectedColor={(color) => setSelectedColor(color)}
                             isUpFrontFee={isUpFrontFee}
                             monthlyPayment={monthlyPayment}
                             calculateUpFrontFee={calculateUpFrontFee}
+                            caroptions={carOptions}
                             />
                             
                            
@@ -1088,16 +1117,24 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 
                             {
                                 isAuthorized ? (
+                                    <> 
+                                    
                                     <div  className="final-step-container">
-                                    <div onClick={createBookmark} className="save-estimate-button">
-                                    見積りを保存する
+                                    <div className="save-estimate-button">
+                                        <div onClick={createBookmark} >
+                                        見積りを保存する
+                                        </div>
+                                       
                                     </div>
+                                    
 
                                     <div className="save-estimate-button rightbutton">
                                     次へ: 販売店選択
                                     </div>
                                     </div>
-                                   
+                                    <div style={{fontSize: "12px", paddingLeft: "50px"}}> {"(My KINTOへのログインが必要です)" }</div>
+                                    </>
+                                    
                                 ) : (
                                     <div onClick={() =>  navigate("/login")  } className="save-estimate-button rightbutton">  
                                         ログインして見積りを保存する
@@ -1112,14 +1149,14 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 
 
                         </div>
-                    ) : (
-                        <p>Loading car options...</p>
-                    )}
+                   
 
                 </div>
 
             </div>
-          
+            ) : (
+                    <p>Loading car options...</p>
+                )}
 
            
 

@@ -21,5 +21,6 @@ export interface SavedBookMark {
     option_package_listitems: any;
     plan: Plan[];
     tire_upgrade_ids: number[];
+    totalprice: number;
     updated_at: string;
 }

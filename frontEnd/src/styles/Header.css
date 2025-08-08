@@ -1,9 +1,13 @@
-.header-logo{
+.homeheader-logo{
     padding: 10px;
-    width: 3rem;
+    width: 90px;
     height: auto;
-    margin-left: 10px;
+    margin-left: 30px;
 
+}
+
+.homeheader-logo-container{
+    width: 10rem;
 }
 
 .header-container{
@@ -16,9 +20,10 @@
 }
 
 .r-header-menu {
-    width: 12rem;
+    width: 15rem;
     height: 3rem;
     display: flex;
+    align-items: center;
     justify-content: flex-end;
     margin-right: 10px;
     gap: 15px;
@@ -70,6 +75,19 @@
     background-color: brown;
     transition: height 300ms;
 
+}
+
+.r-header-menu-logout{
+    width: 100px;
+    height: 35px;
+    background-color:white;
+    border: none;
+}
+
+.r-header-menu-logout:hover{
+    background-color: #dfdfdf;
+    transition: background-color 300ms;
+    cursor: pointer;
 }
 
 .login-logo {

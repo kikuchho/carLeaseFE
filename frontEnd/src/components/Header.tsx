@@ -5,7 +5,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { CiBookmark } from "react-icons/ci";
 import { useState } from "react";
 import "../styles/Header.css";
-import Dropdown from "./dropdown";
+import Dropdown from "./Dropdown";
 import RiseUpMenu from "./RiseUpMenu";
 import { useNavigate } from "react-router-dom";
 import HeaderSearch from "./HeaderSearch";
@@ -14,6 +14,12 @@ function Header({ isAuthorized }: { isAuthorized: boolean }) {
 
     const [isClicked, setIsClicked] = useState(false);
     const navigate = useNavigate()
+
+    function handlelogout() {
+        console.log("logout clicked")
+        localStorage.clear()
+        window.location.reload()
+    }
 
     
     console.log("isAuthorized in header", isAuthorized)
@@ -24,11 +30,12 @@ function Header({ isAuthorized }: { isAuthorized: boolean }) {
         <div>
 
             <div className="header-container">
-                <div>
-                    <img src={Toyota_logo} className="header-logo"  />
+                <div className="homeheader-logo-container" onClick={() => navigate("/")}>
+                    <img src={Toyota_logo} className="homeheader-logo"  />
                 </div>
                 
                 <div className="r-header-menu"> 
+                     { isAuthorized ? <button className="r-header-menu-logout" onClick={()=>{handlelogout()}}> ログアウト </button> : <></>}
                     { isAuthorized ? <RiseUpMenu  /> : <div className="login-logo" onClick={() => navigate("/login") }> <div className="login-text">ログイン</div> </div> }
                     <div> <HeaderSearch /> </div>
                     <Dropdown /> 

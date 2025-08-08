@@ -46,8 +46,8 @@ function App() {
           <Route  path='/logout' element={<Logout/>    }   />
           <Route  path='/login' element={<Login/>    }   />
           <Route  path='/carplan' element={ <CarPlan isAuthorized={true}  />  }   />
-          <Route  path='/carplanloggedout' element={ <CarPlanLoggedOut />    }   />
-          <Route  path='/register/stepone' element={ <RegisterAndLogout/>   }   />
+          <Route  path='/carplanloggedout' element={ <CarPlanLoggedOut isAuthorized={false}/>    }   />
+          <Route  path='/register/stepone' element={ <RegisterAndLogout  />   }   />
           <Route  path='/register/steptwo' element={ <Steptwo/>  }   />
           <Route  path='/register/stepthree' element={ <Stepthree/>  }   />
           <Route  path='/register/stepfour' element={ <Stepfour/>  }   />

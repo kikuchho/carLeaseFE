@@ -2,15 +2,48 @@ import { useEffect, useRef, useState } from "react";
 import { CiBookmark } from "react-icons/ci";
 import "../styles/RiseUpMenu.css";
 import api from "../api";
-import type { SavedBookMark, Plan } from "../pages/CarPlan";
+import { type SavedBookMark, type Plan , type CarOption, getCarOptionDetail} from "../pages/CarPlan";
 import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { getBookmark, getBookmarks } from "../apihelper/apihelper";
 import { images } from "../assets/images";
 
+// [
+//     {
+//         "id": 1,
+//         "name": "ライズ",
+//         "price": 4000000,
+//         "grade": "X GAS 1.2L 2WD",
+//         "imgname": "raize"
+//     },
+//     {
+//         "id": 2,
+//         "name": "ヤリス",
+//         "price": 3000000,
+//         "grade": "X GAS 1.0L 2WD",
+//         "imgname": "yaris"
+//     },
+//     {
+//         "id": 3,
+//         "name": "ノア",
+//         "price": 5000000,
+//         "grade": "X GAS 2.0L 2WD",
+//         "imgname": "noah"
+//     }
+// ]
+
+interface carlist {
+    id: number;
+    name: string;
+    price: number;
+    grade: string;
+    imgname: string;
+}
+
 const RiseUpMenu = () => { 
     const [isOpened, setIsOpened] = useState(false);
     const [bookmarks, setBookmarks] = useState<SavedBookMark[] | null>(null);
+    const [carlists, setCarlist] = useState<carlist[] | null>(null);
     const navigate = useNavigate();
     
     //------------state and logic for bookmarks----------------
@@ -18,38 +51,106 @@ const RiseUpMenu = () => {
     
 
     useEffect(() => {
-        if (isOpened) {
-           document.body.style.overflow = 'hidden'; // Disable scrolling
+        let originalY = 0;
+    
+    if (isOpened) {
+        originalY = window.scrollY;
+        document.body.dataset.scrollLock = originalY.toString();
+        document.body.style.overflow = 'hidden'; // Disable scrolling
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${originalY}px`;
+    } else {
+        // unlock
+        const prevY = parseInt(document.body.dataset.scrollLock || '0', 10);
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.dataset.scrollLock = '';
+        window.scrollTo(0, prevY);
+    }
+    
+    // This cleanup function runs when:
+    // 1. Component unmounts
+    // 2. Before effect runs again with changed dependencies
+    return () => {
+        // Always restore normal body behavior when unmounting
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+        
+        // If we had scrollLock data, restore the scroll position
+        if (document.body.dataset.scrollLock) {
+            const prevY = parseInt(document.body.dataset.scrollLock, 10);
+            document.body.dataset.scrollLock = '';
+            window.scrollTo(0, prevY);
         }
-        else {
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
-        }
+    };
     }, [isOpened]);
 
 
-    //get bookmarks function 
+    //get bookmarks and carlists
     useEffect(() => {
+       
+        
+
         const fetchBookmarks = async () => {
             // const data = await getBookmarks();
             // setBookmarks(data);
 
+            const caridsTemp : number[] = [];
+
+            //get bookmarks 
             getBookmarks().then((data) => {
                 const savedbookmarktemp : SavedBookMark[] = [];
                 data.map((bookmark: SavedBookMark) => {
                     console.log("Bookmark carid: ", bookmark.imgname);
                     savedbookmarktemp.push(bookmark);
-                        
+                    caridsTemp.push(bookmark.carid); 
                 });
                 setBookmarks(savedbookmarktemp);
-                console.log("bookmarks are " + data[0]?.carid);
+                console.log("bookmarks are " + caridsTemp);
+                console.log("Fetched bookmarks price!!!!!!!!!:", savedbookmarktemp[0].totalprice);
+                
+
+
             }).catch((error) => {
                 
                 console.error("Error fetching bookmarks:", error);
             })
+
+            
             
         };
         fetchBookmarks();
+
+        fetchCarList();
+
     }, []);
+
+   
+
+
+
+    const fetchCarList = async () => {
+       
+        api.get("/api/cars/").then((res) => {
+            const response = res.data;
+            const carlisttemp: carlist[] = response.map((car: any) => ({
+                id: car.id,
+                name: car.name,
+                price: car.price,
+                grade: car.grade,
+                imgname: car.imgname
+            }));
+            setCarlist(carlisttemp);
+            console.log("!!!!!!!!Car list fetched successfully!!!!!!!:", carlisttemp);
+        }).catch((err) => { 
+            console.log("Error fetching car list: ", err);
+        });
+    }
+
+   
+    
 
     // Extract fetchBookmarks as a named function so you can reuse it
     const fetchBookmarks = async () => {
@@ -59,6 +160,7 @@ const RiseUpMenu = () => {
             data.forEach((bookmark: SavedBookMark) => {
                 savedbookmarktemp.push(bookmark);
             });
+            console.log("Fetched bookmarks!!!!!!!!!:", savedbookmarktemp);
             setBookmarks(savedbookmarktemp);
         } catch (error) {
             console.error("Error fetching bookmarks:", error);
@@ -144,28 +246,6 @@ const RiseUpMenu = () => {
 
     }
 
-    const createBookmark = async (e :any) => {
-        e.preventDefault();
-
-        api.post("api/bookmarks/", { plan, contract_year, carid}).then((res) => {
-            if( res.status === 201) {
-                alert("Bookmark created successfully");
-               
-            }else{
-                alert("Failed to create a bookmark");
-            }
-        }).catch((err) => alert(err)); 
-
-        getBookmarks(); 
-    }
-
-    const author = "test1111" 
-    const plan = [
-            {"plan_id": 1, "name": "Basic", "amount": 500},
-            {"plan_id": 2, "name": "Premium", "amount": 1000}
-        ]
-    const contract_year = 2015 
-    const carid = 1 
     //------------end of bookmarks logic----------------
 
 
@@ -196,7 +276,7 @@ const RiseUpMenu = () => {
         <div className={`riseup-menu-content ${isOpened ? "rise-up open" : "fall-down"}`} ref={menuRef}>
             <div className="riseup-menu-items">
 
-                <div style={{paddingTop:"30px",display: "flex", justifyContent: "end", alignItems: "center"}}> 
+                <div style={{paddingTop:"10px",display: "flex", justifyContent: "end", alignItems: "center"}}> 
                     <div className="riseup-close-button">
                         <IoMdClose  onClick={() => {
                             setIsOpened(false);
@@ -206,57 +286,78 @@ const RiseUpMenu = () => {
                 </div>
                 
 
-                <div> 
+                <div className="riseup-bookmark-header" > 
                     <h4>ブックマーク</h4>
-                    <div>
+                    <div style={{paddingBottom: "20px", paddingTop: "20px"}}>
 
                         見積りの保存期間は約12ヵ月です。経過後は自動的に削除されます。
                     </div>
                 </div>
                 
-                <div style={{display: "flex"}}>
-                    <div>
+                <div style={{display: "flex", fontWeight: "bold", fontSize: " 18px ", paddingBottom: "40px", paddingTop: "20px"}}>
+                    <div style={{ paddingRight: "10px"}}>
                         すべて
                     </div>
-                    <div>
+                    <div >
                         カローラ スポーツ
                     </div>
                 </div>
                 
 
-                <div>
+                <h4 style={{paddingBottom: "20px"}}>
                     お気に入りにした車種
-                </div>
+                </h4>
                 
                 <div className="riseup-bookmark-top-container">
-                    <div>
-                        <div>気になったクルマをブックマークできる</div>
-                        <div>ブックマーク登録しておけば、いつでもすぐ見返すことができます。</div>
-                        <div>お気に入りのクルマを探す</div>
+                    <div style={{padding: "40px"}}>
+                        <h4 style={{paddingBottom: "20px"}}>気になったクルマをブックマークできる</h4>
+                        <div style={{fontSize: "18px"}}>ブックマーク登録しておけば、いつでもすぐ見返すことができます。</div>
+                        <div className="riseup-bookmark-top-container-button">お気に入りのクルマを探す</div>
                     </div>
-                    <div>
-                        <img/>
+                    <div style={{width: "400px", paddingRight: "20px"}}>
+                        
+                        <img src={images["bookcaricon"]} alt="bookmarkcar" />
                     </div>
                 </div>
 
-                <div>
+                <h4 style={{paddingTop: "50px", paddingBottom: "20px", fontWeight: "bold"}}>
                     保存した見積り
-                </div>
+                </h4>
                 
 
                 {
                     bookmarks && bookmarks.length > 0 ? 
                     bookmarks.map((bookmark: SavedBookMark) => (
                         <div key={bookmark.id} className="riseup-bookmark-item">
-                            <div> 
+                             <div style={{paddingTop:"10px",display: "flex", justifyContent: "end", alignItems: "center"}}> 
+                                <div className="riseup-close-button">
+                                    <IoMdClose  onClick={() => {
+                                        deleteBookmarks(bookmark.id);
+                                    }} size={"20px"}/>
+                                </div>
+                            </div>
+                            <div> {formatDate(bookmark.created_at)} </div>
+                            <div style={{fontWeight: "bold"}}> メーカー参考価格 </div>
+                            <div className="riseup-bookmark-item-img-container"> 
                                 <img src={images[`${ bookmark.imgname  }`]} alt="Car" className="riseup-bookmark-image" />
                             </div>
-                            <p>Car ID: {bookmark.carid}</p>
-                            <p>color id: {bookmark.color_id}</p>
+                            <div> {  } </div>
+                            <p> 
+                                {carlists?.map((car) => {
+                                if(car.id === bookmark.carid){
+                                    return car.name;
+                                }})
+                                }
+                            </p>
+                            <p style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline"}}>車両本体価格   {carlists?.map((car) => {
+                                if(car.id === bookmark.carid){
+                                    return <div style={{fontSize: "29px", fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px", paddingBottom: "20px"}}> {car.price.toLocaleString() } </div>;
+                                }})
+                                } 円 </p>
                             {/* <p>Plan: {bookmark.plan.map((p: any) => p.name).join(", ")}</p> */}
-                            <p>bonus payment Plan: {bookmark.plan[0].bonusPayment}  </p>
+                            <p>bonus payment Plan: {bookmark.totalprice}  </p>
                             <button onClick={() =>navigate(`/carplan?carId=${bookmark.carid}&bookmark=${bookmark.id}`) } className="riseup-menu-button">この料金見積りをする</button>
-                            <button onClick={() => deleteBookmarks(bookmark.id)} className="riseup-menu-button">Delete Bookmark</button>
+                            <button className="riseup-bookmark-item-testdrive" style={{width:"90%", height: "50px", margin: "20px"}}>試乗予約する</button>
                         </div>
 
                         
@@ -265,7 +366,7 @@ const RiseUpMenu = () => {
                 } 
                
                
-                <button onClick={createBookmark} className="riseup-menu-button">Create Bookmark</button>
+               
             </div>
         </div>
         : null
@@ -275,6 +376,24 @@ const RiseUpMenu = () => {
     </div>
     )
 }
+
+export const formatDate = (isoString: string): string => {
+  const date = new Date(isoString);
+  
+  // Get components
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  
+  // Get day of week in Japanese
+  const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+  const dayOfWeek = daysOfWeek[date.getDay()];
+  
+  // Create formatted string
+  return `${year}/${month}/${day} (${dayOfWeek}) ${hours}:${minutes}`;
+};
 
 export default RiseUpMenu;
 

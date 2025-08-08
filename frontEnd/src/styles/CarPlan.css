@@ -4,7 +4,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    height:4400px
+    height:4700px
 }
 
 .car-color-image-container{
@@ -392,7 +392,7 @@
 .car-image-container {
   position: relative;
   width: 100%;
-  min-height: 5000px; /* Give enough height for scrolling context */
+  min-height: 4400px; /* Give enough height for scrolling context */
 }
 
 .save-estimate-button{

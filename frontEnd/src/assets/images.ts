@@ -10,6 +10,16 @@ import yaris_x_4 from './estimateplan/yaris_x/yaris_x_4.png';
 import yaris_x_5 from './estimateplan/yaris_x/yaris_x_5.png';
 import defaultX from './estimateplan/yaris_x/default.png';
 import defaultZ from './estimateplan/yaris_z/default.png';
+
+import raizedefault from './estimateplan/raize_x/raize_default.png';
+import raize_z_1 from './estimateplan/raize_z/raize_z_1.png';
+import raize_g_1 from './estimateplan/raize_g/raize_g_1.png';   
+
+
+
+
+
+
 import floormat_basic from './estimateplan/kintooptionpackage/floormat_basic.jpg';
 import floormat_deluxe from './estimateplan/kintooptionpackage/floormat_deluxe.jpg';
 import no_image_option from './estimateplan/kintooptionpackage/no_image_option.png';
@@ -25,7 +35,10 @@ import yaris_interior_ex from './estimateplan/interiorcolor/yaris_interior_ex.pn
 import prefferednumbeplate from './estimateplan/numberplate/prefferednumberplate.png';
 import kintocarplan_footerlogo from './estimateplan/kintocarplan_footerlogo.png'
 
+import bookcaricon from './riseupmenu/bookcaricon.svg';
+
 export const images : { [key: string]: any} = {
+    "yaris": defaultX,
     "yaris_x": defaultX,
     "yaris_z": defaultZ,
     "yaris_z_1": yaris_z_1,
@@ -38,6 +51,15 @@ export const images : { [key: string]: any} = {
     "yaris_x_3": yaris_x_3,
     "yaris_x_4": yaris_x_4,
     "yaris_x_5": yaris_x_5,
+
+    "raize": raizedefault,
+    "raize_x": raizedefault,
+    "raize_z": raize_z_1, 
+    "raize_g": raize_g_1,
+    "raize_z_1": raize_z_1,
+    "raize_g_1": raize_g_1,
+
+
     "floormat_basic": floormat_basic,
     "floormat_deluxe": floormat_deluxe,
     "no_image_option": no_image_option,
@@ -51,7 +73,7 @@ export const images : { [key: string]: any} = {
 
     "yaris_interior_ex": yaris_interior_ex,
 
-
+    "bookcaricon": bookcaricon,
 
     "kintocarplan_footerlogo": kintocarplan_footerlogo
 };
