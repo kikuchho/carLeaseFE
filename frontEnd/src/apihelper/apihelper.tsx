@@ -36,7 +36,9 @@ export const getBookmark = async (bookmarkId: string): Promise<SavedBookMark | n
             option_package_listitems: response.option_package_listitems,
             plan: PlanTemp,
             tire_upgrade_ids: response.tire_upgrade_ids,
+            totalprice: response.totalprice,
             updated_at: response.updated_at,
+            
         };
         
         return bookmarkData;
@@ -110,6 +112,7 @@ export const getBookmarks = async (): Promise<SavedBookMark[]> => {
                 option_package_listitems: bookmark.option_package_listitems,
                 plan: PlanTemp,
                 tire_upgrade_ids: bookmark.tire_upgrade_ids,
+                totalprice: bookmark.totalprice,
                 updated_at: bookmark.updated_at,
             };
         });

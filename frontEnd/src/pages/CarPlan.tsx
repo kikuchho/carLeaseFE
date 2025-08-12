@@ -373,7 +373,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                 const tire = carOptions.tire_upgrades.find(t => t.id === tireId);
                 return sum + (tire ? tire.price : 0);
             }, 0);
-        }
+        } 
         if (selectedNumberPlates){
             totalPrice += selectedNumberPlates.price;
         } 
@@ -382,7 +382,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         //const basePayment = calculateMonthlyPayment(carOptions.price, bonusPayment, contractTerm);
         const optionPayment = totalPrice;
 
-        setTotalcarPrice(totalPrice);
+        setTotalcarPrice(totalPrice - monthlyPaymentTemp);
         
         console.log(" selectedoptionpackage price " + selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.price);
         console.log("optionPayment is " + optionPayment, "selectedGrade/color/interior.price " + selectedGrade?.price, selectedColor?.price, selectedInterior?.price );

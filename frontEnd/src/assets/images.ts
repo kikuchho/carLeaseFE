@@ -36,6 +36,7 @@ import prefferednumbeplate from './estimateplan/numberplate/prefferednumberplate
 import kintocarplan_footerlogo from './estimateplan/kintocarplan_footerlogo.png'
 
 import bookcaricon from './riseupmenu/bookcaricon.svg';
+import simulationicon from './riseupmenu/simulationicon.svg';
 
 export const images : { [key: string]: any} = {
     "yaris": defaultX,
@@ -75,5 +76,6 @@ export const images : { [key: string]: any} = {
 
     "bookcaricon": bookcaricon,
 
-    "kintocarplan_footerlogo": kintocarplan_footerlogo
+    "kintocarplan_footerlogo": kintocarplan_footerlogo,
+    "simulationicon": simulationicon
 };

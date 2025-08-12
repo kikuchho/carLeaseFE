@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CiBookmark } from "react-icons/ci";
 import "../styles/RiseUpMenu.css";
 import api from "../api";
@@ -48,7 +48,24 @@ const RiseUpMenu = () => {
     
     //------------state and logic for bookmarks----------------
     const [content, setContent] = useState<string | null>(null);
+
+    const uniqueCarNames = getUniqueCarNames(bookmarks, carlists);
+
+    const [activeFilter, setActiveFilter] = useState<string | null>(null);
     
+    // define filtered bookmarks
+    const filteredBookmarks = useMemo(() => {
+    if (!activeFilter || !bookmarks || !carlists) return bookmarks;
+    
+    return bookmarks.filter(bookmark => {
+        const car = carlists.find(car => car.id === bookmark.carid);
+        return car && car.name === activeFilter;
+    });
+    }, [bookmarks, carlists, activeFilter]);
+
+    
+
+
 
     useEffect(() => {
         let originalY = 0;
@@ -86,6 +103,8 @@ const RiseUpMenu = () => {
         }
     };
     }, [isOpened]);
+
+    console.log("bookmarks are ", bookmarks);
 
 
     //get bookmarks and carlists
@@ -295,13 +314,29 @@ const RiseUpMenu = () => {
                 </div>
                 
                 <div style={{display: "flex", fontWeight: "bold", fontSize: " 18px ", paddingBottom: "40px", paddingTop: "20px"}}>
-                    <div style={{ paddingRight: "10px"}}>
+                    <div 
+                    style={{ paddingRight: "10px"}}
+                    onClick={() => setActiveFilter(null)}
+                    >
                         すべて
                     </div>
                     <div >
-                        カローラ スポーツ
+                        {
+                            uniqueCarNames.map(carName => ( 
+
+                                <button
+                                key={carName}
+                                className={`car-filter-button ${activeFilter === carName ? 'active' : ''}`}
+                                
+                                >
+                                {carName}
+                                </button>
+                              ))
+                        }
                     </div>
                 </div>
+
+
                 
 
                 <h4 style={{paddingBottom: "20px"}}>
@@ -326,8 +361,8 @@ const RiseUpMenu = () => {
                 
 
                 {
-                    bookmarks && bookmarks.length > 0 ? 
-                    bookmarks.map((bookmark: SavedBookMark) => (
+                    filteredBookmarks && filteredBookmarks.length > 0 ? 
+                    filteredBookmarks.map((bookmark: SavedBookMark) => (
                         <div key={bookmark.id} className="riseup-bookmark-item">
                              <div style={{paddingTop:"10px",display: "flex", justifyContent: "end", alignItems: "center"}}> 
                                 <div className="riseup-close-button">
@@ -349,20 +384,48 @@ const RiseUpMenu = () => {
                                 }})
                                 }
                             </p>
-                            <p style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline"}}>車両本体価格   {carlists?.map((car) => {
-                                if(car.id === bookmark.carid){
-                                    return <div style={{fontSize: "29px", fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px", paddingBottom: "20px"}}> {car.price.toLocaleString() } </div>;
-                                }})
-                                } 円 </p>
-                            {/* <p>Plan: {bookmark.plan.map((p: any) => p.name).join(", ")}</p> */}
-                            <p>bonus payment Plan: {bookmark.totalprice}  </p>
+
+                            <div className="riseup-priceinfo-wrapper">
+                                <div style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline"}}> <div>車両本体価格</div> </div>  
+
+                                <div style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline", justifyContent: "end"}}>
+                                    {carlists?.map((car) => {
+                                        if(car.id === bookmark.carid){
+                                            return <div style={{fontSize: "29px", fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px", paddingBottom: "0px"}}> {car.price.toLocaleString() } </div>;
+                                        }})
+                                    } 円 
+                                </div>
+                                
+                    
+                                <p style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline" }}
+                                >オプション価格 </p>
+                                <div style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline", justifyContent: "end"}}> 
+                                    <div style={{fontSize: "29px", fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px", paddingBottom: "20px"}}> {bookmark.totalprice} </div> 円 
+                                </div>
+                                
+                            </div>
+                           
+                            <p>
+                                お支払い方法：現金一括払い
+                            </p>
                             <button onClick={() =>navigate(`/carplan?carId=${bookmark.carid}&bookmark=${bookmark.id}`) } className="riseup-menu-button">この料金見積りをする</button>
                             <button className="riseup-bookmark-item-testdrive" style={{width:"90%", height: "50px", margin: "20px"}}>試乗予約する</button>
                         </div>
 
                         
                     )) 
-                    : <p>No bookmarks available</p>
+                    : 
+                    <div className="riseup-bookmark-top-container">
+                        <div style={{padding: "40px"}}>
+                            <h4 style={{paddingBottom: "20px"}}>クルマの見積りを保存</h4>
+                            <div style={{fontSize: "18px"}}>クルマの見積りを簡単ステップでシミュレーションし、販売店に見積りを送付して相談することができます。</div>
+                            <div className="riseup-bookmark-top-container-button">見積りシミュレーションをする</div>
+                        </div>
+                        <div style={{width: "400px", paddingRight: "20px"}}>
+                            
+                            <img src={images["simulationicon"]} alt="simulationicon" />
+                        </div>
+                    </div>
                 } 
                
                
@@ -398,6 +461,25 @@ export const formatDate = (isoString: string): string => {
 export default RiseUpMenu;
 
 
+const getUniqueCarNames = (bookmarks: SavedBookMark[] | null, carlists: carlist[] | null): string[] => {
+
+    if (!bookmarks || !carlists) return [];
+
+    // Create a Set to automatically handle uniqueness
+    // Using a Set to store unique car names 
+    const uniqueCarNames = new Set<string>();
+
+    bookmarks.forEach(bookmark => {
+        const car = carlists.find(car => car.id === bookmark.carid);
+        if (car) {
+            uniqueCarNames.add(car.name);
+        }
+    })
+
+    // Convert Set back to an array
+    return Array.from(uniqueCarNames);
+}
+
 
 
 
@@ -430,3 +512,87 @@ export default RiseUpMenu;
     //     // .then((data) => setBookmarks(data))   
     //     // .catch((err) => alert(err));
     // }
+
+
+
+    // <div style={{display: "flex", fontWeight: "bold", fontSize: " 18px ", paddingBottom: "40px", paddingTop: "20px"}}>
+    //                 <div style={{ paddingRight: "10px"}}>
+    //                     すべて
+    //                 </div>
+    //                 <div >
+    //                     カローラ スポーツ
+    //                 </div>
+    //             </div>
+                
+
+    //             <h4 style={{paddingBottom: "20px"}}>
+    //                 お気に入りにした車種
+    //             </h4>
+                
+    //             <div className="riseup-bookmark-top-container">
+    //                 <div style={{padding: "40px"}}>
+    //                     <h4 style={{paddingBottom: "20px"}}>気になったクルマをブックマークできる</h4>
+    //                     <div style={{fontSize: "18px"}}>ブックマーク登録しておけば、いつでもすぐ見返すことができます。</div>
+    //                     <div className="riseup-bookmark-top-container-button">お気に入りのクルマを探す</div>
+    //                 </div>
+    //                 <div style={{width: "400px", paddingRight: "20px"}}>
+                        
+    //                     <img src={images["bookcaricon"]} alt="bookmarkcar" />
+    //                 </div>
+    //             </div>
+
+    //             <h4 style={{paddingTop: "50px", paddingBottom: "20px", fontWeight: "bold"}}>
+    //                 保存した見積り
+    //             </h4>
+                
+
+    //             {
+    //                 bookmarks && bookmarks.length > 0 ? 
+    //                 bookmarks.map((bookmark: SavedBookMark) => (
+    //                     <div key={bookmark.id} className="riseup-bookmark-item">
+    //                          <div style={{paddingTop:"10px",display: "flex", justifyContent: "end", alignItems: "center"}}> 
+    //                             <div className="riseup-close-button">
+    //                                 <IoMdClose  onClick={() => {
+    //                                     deleteBookmarks(bookmark.id);
+    //                                 }} size={"20px"}/>
+    //                             </div>
+    //                         </div>
+    //                         <div> {formatDate(bookmark.created_at)} </div>
+    //                         <div style={{fontWeight: "bold"}}> メーカー参考価格 </div>
+    //                         <div className="riseup-bookmark-item-img-container"> 
+    //                             <img src={images[`${ bookmark.imgname  }`]} alt="Car" className="riseup-bookmark-image" />
+    //                         </div>
+    //                         <div> {  } </div>
+    //                         <p> 
+    //                             {carlists?.map((car) => {
+    //                             if(car.id === bookmark.carid){
+    //                                 return car.name;
+    //                             }})
+    //                             }
+    //                         </p>
+    //                         <p style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline"}}>車両本体価格   {carlists?.map((car) => {
+    //                             if(car.id === bookmark.carid){
+    //                                 return <div style={{fontSize: "29px", fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px", paddingBottom: "20px"}}> {car.price.toLocaleString() } </div>;
+    //                             }})
+    //                             } 円 </p>
+    //                         {/* <p>Plan: {bookmark.plan.map((p: any) => p.name).join(", ")}</p> */}
+    //                         <p>bonus payment Plan: {bookmark.totalprice}  </p>
+    //                         <button onClick={() =>navigate(`/carplan?carId=${bookmark.carid}&bookmark=${bookmark.id}`) } className="riseup-menu-button">この料金見積りをする</button>
+    //                         <button className="riseup-bookmark-item-testdrive" style={{width:"90%", height: "50px", margin: "20px"}}>試乗予約する</button>
+    //                     </div>
+
+
+
+
+    //  <div>
+    //                             <p style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline"}}>車両本体価格   
+    //                                 {carlists?.map((car) => {
+    //                                     if(car.id === bookmark.carid){
+    //                                         return <div style={{fontSize: "29px", fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px", paddingBottom: "0px"}}> {car.price.toLocaleString() } </div>;
+    //                                     }})
+    //                                 } 円 
+    //                             </p>
+    //                             {/* <p>Plan: {bookmark.plan.map((p: any) => p.name).join(", ")}</p> */}
+    //                             <p style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline"}}
+    //                             >オプション価格: <div style={{fontSize: "29px", fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px", paddingBottom: "20px"}}> {bookmark.totalprice} </div> 円 </p>
+    //                         </div>

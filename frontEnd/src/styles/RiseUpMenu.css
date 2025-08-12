@@ -131,3 +131,10 @@
     background-color: rgb(187, 187, 187);
     
 }
+
+
+.riseup-priceinfo-wrapper{
+    align-items: baseline;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
