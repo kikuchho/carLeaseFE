@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import RegisterHeader from '../../components/RegisterHeader';
 import '../../styles/stepfour.css';
 import { useCustomerInfoStore, usePasswordStore, useUsernameStore } from '../../store/register-store';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api';
 import { FaCheck } from 'react-icons/fa';
 
 const Stepone = () => {
@@ -15,26 +14,24 @@ const Stepone = () => {
    const {
           firstName, lastName, firstNameKana, lastNameKana,
           birthdateYear, birthdateMonth, birthdateDay,
-          gender, zipCode, zipCodeFirst, zipCodeSecond,
+          gender, zipCodeFirst, zipCodeSecond,
           prefecture, city, address, buildingNumber, buildingName,
           phoneFirst, phoneSecond, phoneThird, 
           phonetwoFirst, phonetwoSecond, phonetwoThird, 
           phonethreeFirst, phonethreeSecond, phonethreeThird, workplaceName,
           companyName, companyNameKana, companydepartment, companydepartmentKana,personinChargeFirstName ,personinChargeLastName,
-          personinChargeFirstNameKana, personinChargeLastNameKana, customerType,
-          setFirstName, setLastName, setFirstNameKana, setLastNameKana,
-          setBirthdateYear, setBirthdateMonth, setBirthdateDay,
-          setGender, setZipCode, setZipCodeFirst, setZipCodeSecond,
-          setPrefecture, setCity, setAddress, setBuildingNumber, setBuildingName,
-          setPhoneFirst, setPhoneSecond, setPhoneThird,
-          setPhonetwoFirst, setPhonetwoSecond, setPhonetwoThird,
-          setPhonethreeFirst, setPhonethreeSecond, setPhonethreeThird, setworkplaceName,
-          setCompanyName, setCompanyNameKana, setcompanydepartment,setcompanydepartmentKana ,setpersoninChargeFirstName ,
-          setpersoninChargeLastName ,setpersoninChargeFirstNameKana ,setpersoninChargeLastNameKana , setCustomerType
-      } = useCustomerInfoStore();
+          personinChargeFirstNameKana, personinChargeLastNameKana, customerType
+          
+          
+          
+          
+          
+          
+          
+                } = useCustomerInfoStore();
   
       const navigate = useNavigate()
-      const [loading, setLoading] = useState(false)
+      const [, setLoading] = useState(false)
 
 
       const handleRegiter = () => {
@@ -42,9 +39,6 @@ const Stepone = () => {
           console.log("Registering user with username:", username, " and password:", password);
 
           setLoading(true);
-          const res = api.post("api/user/register/", {
-          username, 
-          password })
 
           console.log("Registration success:");
           navigate("/register/stepfive");

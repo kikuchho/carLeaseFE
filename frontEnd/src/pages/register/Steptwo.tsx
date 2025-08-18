@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
-import {  Navigate, useNavigate  } from 'react-router-dom'
+import { useState } from 'react';
+import {  useNavigate  } from 'react-router-dom'
 import '../../styles/steptwo.css';
 import RegisterHeader from '../../components/RegisterHeader';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
-import api from '../../api';
-import { usePasswordStore } from '../../store/register-store';
 import { useUsernameStore } from '../../store/register-store';
 import { IoMdWarning } from "react-icons/io";
 
@@ -13,13 +10,13 @@ const Steptwo = () => {
     const [username, setUsername] = useState("")
     const [invalidUsername, setInvalidUsername] = useState(false);
     const [isUsernameEmpty, setIsUsernameEmpty] = useState(false);
-    const [loading, setLoading] = useState(false)
+    //const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
     //state management 
     const userName = useUsernameStore(state => state.username);
     const setuserName = useUsernameStore(state => state.setUsername);
-    const removeuserName = useUsernameStore(state => state.removeUsername);
+    //const removeuserName = useUsernameStore(state => state.removeUsername);
    
 
     const handleUserName = (e : any)=> {

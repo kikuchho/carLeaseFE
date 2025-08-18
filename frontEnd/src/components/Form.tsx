@@ -1,6 +1,6 @@
 import {useState} from "react"
 import api from "../api"
-import { Navigate, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants"
 import toyota_letters_logo from "../assets/toyota_letters_logo.png"
 import "../styles/Form.css"
@@ -14,7 +14,7 @@ function Form({route, method}: FormProps){
     //REMINDER!! USERNAME = EMAILADDRESS
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const [loading, setLoading] = useState(false)
+    const [, setLoading] = useState(false)
     const navigate = useNavigate()
     const [invalidUsername, setInvalidUsername] = useState(false);
     const [autoLogin, setAutoLogin] = useState(false);

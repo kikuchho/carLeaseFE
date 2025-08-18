@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/dropdown.css"; 
 import { IoMdClose } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
 
 import Toyota_logo from "../assets/Toyota-logo.png"; // Adjust the path as necessary
-import arrowleft from "../assets/arrowleft.svg"; // Adjust the path as necessary
 import arrowright from "../assets/arrowright.svg"; // Adjust the path as necessary
 
 

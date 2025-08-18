@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../styles/ContentsDrawer.css'; 
 import { IoIosArrowForward } from "react-icons/io";
 
@@ -6,12 +6,12 @@ const ContentsDrawer = () => {
 
     //USE STICKY INSET INSTEAD OF ABSOLUTE / // FIXED POSITIONING
 
-    const [isOpen, setIsOpen] = React.useState(false);
+    // const [isOpen, setIsOpen] = React.useState(false);
     const [isPastThreshold1, setIsPastThreshold1] = useState(false);
     // Difference between : Distance from top of document to top of drawer and : Distance user has scrolled from top
-    const [scrollDistance, setScrollDistance] = useState(0); 
-    const [horizontalScroll, setHorizontalScroll] = useState(0); 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [, setScrollDistance] = useState(0); 
+    const [, setHorizontalScroll] = useState(0); 
+    const [, setWindowWidth] = useState(window.innerWidth);
     const [footerDistanceFromTop, setFooterDistanceFromTop] = useState(5700); // Default fallback
 
 
@@ -36,7 +36,6 @@ const ContentsDrawer = () => {
             
             if (footerElement) {
                 // getBoundingClientRect gives position relative to viewport
-                const rect = footerElement.getBoundingClientRect();
                 // Add current scroll position to get absolute position from document top
                 currentFooterDistance =  window.scrollY;
                 setFooterDistanceFromTop(currentFooterDistance);

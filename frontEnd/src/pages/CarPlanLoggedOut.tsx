@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ProtetecdRoute from "../components/ProtectedRoutes";
 import api from "../api";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../styles/CarPlan.css";
@@ -7,7 +6,7 @@ import CarPlanHeader from "../components/carPlan/CarPlanHeader";
 import { images } from "../assets/images";
 import FixedFooterCarPay from "../components/carPlan/FixedFooterCarPay";
 import { FaCheck } from "react-icons/fa6";
-import GradeList from "../components/carPlan/gradelist";
+import GradeList from "../components/carPlan/GradeList";
 import FreeUpFrontFee from "../components/carPlan/FreeUpFrontFee";
 
 
@@ -150,6 +149,7 @@ export interface SavedBookMark
     option_package_listitems: option_packages;
     plan: Plan[];
     tire_upgrade_ids: number[];
+    totalprice: number;
     updated_at: string;
 }
 
@@ -166,8 +166,8 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
 
 
     const [imagePath, setImagePath] = useState<string>("");
-    const [optionpackageImagePath, setOptionPackageImagePath] = useState<string>("no_image_option");
-    const [content, setContent] = useState<string | null>(null);
+   
+    
     //bookmark contain a one bookmark object that is fetched from getCarOptionDetail, null if the user came from cardslider component 
     // should not be empty if the user came from RiseUpMenu component
     const [bookmark, setBookmark] = useState<SavedBookMark| null>(null);
@@ -175,6 +175,7 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
     const [firstRender, setFirstRender] = useState<boolean>(true);
     const [isOptionDetailClicked, setIsOptionDetailClicked] = useState<boolean>(false);
 
+    const [totalcarprice, setTotalcarPrice] = useState<number>(0);
     const [monthlyPayment, setMonthlyPayment] = useState<number>(0);
     const [monthlyPaymentwithoption, setMonthlyPaymentwithOption] = useState<number>(0);
     const [bonusPayment, setBonusPayment] = useState<number>(0); //how much extra money he will pay from his bonus 
@@ -371,7 +372,7 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
                 const tire = carOptions.tire_upgrades.find(t => t.id === tireId);
                 return sum + (tire ? tire.price : 0);
             }, 0);
-        }
+        } 
         if (selectedNumberPlates){
             totalPrice += selectedNumberPlates.price;
         } 
@@ -379,6 +380,8 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
         // Calculate payments
         //const basePayment = calculateMonthlyPayment(carOptions.price, bonusPayment, contractTerm);
         const optionPayment = totalPrice;
+
+        setTotalcarPrice(totalPrice - monthlyPaymentTemp);
         
         console.log(" selectedoptionpackage price " + selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.price);
         console.log("optionPayment is " + optionPayment, "selectedGrade/color/interior.price " + selectedGrade?.price, selectedColor?.price, selectedInterior?.price );
@@ -451,7 +454,7 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
                     bonusPayment: plan.bonusPayment || '0'
                 }));
 
-                const interiorExteriorUpgradeIds : number[] = [] ;
+                
 
                 console.log(response.interior_exterior_upgrade_ids + " !!!!!!!!!!!!is response.interior_exterior_upgrade_id");
 
@@ -472,13 +475,14 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
                     option_package_listitems: response.option_package_listitems,
                     plan: PlanTemp,
                     tire_upgrade_ids: response.tire_upgrade_ids,
+                    totalprice: response.totalprice,
                     updated_at: response.updated_at,
                     
                 };
 
                 setBookmark(bookmarktemp);
 
-                 console.log("savedbookmark response are " , bookmarktemp.interior_exterior_upgrade_ids);
+                 console.log("savedbookmark response are " , bookmarktemp.totalprice);
             })
             .catch((err) => { console.log(err); });
 
@@ -494,25 +498,7 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
         // .catch((err) => alert(err));
     }
 
-    const deleteBookmarks = async (id: string) => {
-         api
-        .get("/api/bookmarks/delete/${id}/")
-        .then((res) => { 
-
-            if(res.status === 204) {
-                alert("note deleted ")
-            }
-            else{
-                alert("Failed to delete a note ")
-            }
-
-
-         })
-        .catch((err) => { console.log(err); });
-
-        getBookmark(); //refresh the bookmarks after deleting
-
-    }
+   
 
     const createBookmark = async (e :any) => {
         e.preventDefault();
@@ -523,7 +509,6 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
         ]
 
         if( selectedInteriorExteriorUpgrade && selectedInteriorExteriorUpgrade.length > 0) {
-            let selectedInteriorExteriorUpgradeTemp : any = [];
             console.log(selectedInteriorExteriorUpgrade + " is selectedInteriorExteriorUpgrade!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             for (let i = 0; i < selectedInteriorExteriorUpgrade.length; i++) {
                
@@ -542,13 +527,13 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
         const option_package_listitems = selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid) || { id: 1, item: "error", price: 0, url: "error" }; // Ensure option_package_listitems is an object with default values
         const interior_exterior_upgrade_ids = selectedInteriorExteriorUpgrade || []; // Ensure interior_exterior_upgrade_ids is an array, default to empty array if undefined
         const tire_upgrade_ids = selectedTireUpgrades || []; // Ensure tire_upgrade_id is a number, default to 0 if undefined
-
+        const totalprice = totalcarprice || 0;
         
         const numberplate_number = numberplateNumber || ""; // Ensure numberplate_number is a string, default to empty string if undefined
         
-        
+        console.log(totalprice + "!!!!!!!!!!!!! is totalprice");
 
-        api.post("api/bookmarks/", { plan, contract_year, carid,imgname, is_upFrontFee, grade_id, color_id, interior_id,option_package_id, option_package_listitems ,interior_exterior_upgrade_ids,tire_upgrade_ids, numberplate_number }).then((res) => {
+        api.post("api/bookmarks/", { plan, contract_year, carid,imgname, is_upFrontFee, grade_id, color_id, interior_id,option_package_id, option_package_listitems ,interior_exterior_upgrade_ids,tire_upgrade_ids, numberplate_number, totalprice }).then((res) => {
             if( res.status === 201) {
                 alert("Bookmark created successfully");
                
@@ -564,7 +549,7 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
 
 
     return (
-        <ProtetecdRoute path="/carplanloggedout">
+        
         <div style={{ height: "3000px"}}>
             <CarPlanHeader />
             {carOptions ? (
@@ -984,7 +969,7 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
                             {
                                 carOptions.tire_upgrades.length > 0 ? (
                                     <div>
-                                        {carOptions.tire_upgrades.map((tire, index) => (
+                                        {carOptions.tire_upgrades.map((tire) => (
                                             
                                             <div key={tire.id}
                                                 className={"tireupgrade-item"}
@@ -1131,9 +1116,25 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
                                     </>
                                     
                                 ) : (
-                                    <div onClick={() =>  navigate("/login")  } className="save-estimate-button rightbutton">  
-                                        ログインして見積りを保存する
+                                   <>
+                                   
+                                    <div  className="final-step-container">
+
+                                    <div className="save-estimate-button">
+                                        <div onClick={() =>  navigate("/login")  } className="rightbutton">  
+                                            ログインして見積りを保存する
+                                        </div>
                                     </div>
+                                    
+
+                                    <div className="save-estimate-button rightbutton">
+                                    次へ: 販売店選択
+                                    </div>
+                                    </div>
+                                    <div style={{fontSize: "12px", paddingLeft: "50px"}}> {"(My KINTOへのログインが必要です)" }</div>
+                                   
+                                   </>
+                                    
                                 )
                             }   
 
@@ -1156,7 +1157,7 @@ const CarPlanLoggedOut = ({isAuthorized}: {isAuthorized: boolean}) => {
            
 
         </div>
-        </ProtetecdRoute>
+       
        
     );
 }
@@ -1331,3 +1332,434 @@ export const getCarOptionDetail = async (carId: string | null): Promise<CarOptio
 
 
 
+
+
+// carOptions.interior_exterior_upgrades.length > 0 ? (
+//                                     <ul>
+//                                         {carOptions.interior_exterior_upgrades.map((upgrade, index) => (
+//                                             <>
+//                                             <li key={upgrade.id}
+//                                             // any row (entry) that has "all" in name field will always be shown  
+//                                             className={ `${selectedInteriorExteriorUpgrade?.id === upgrade.id ? "option-selected" : ""}
+//                                                         ${ (upgrade.name === "all") ? `show`: ((upgrade.name === selectedGrade?.name) ? `show` : `hide`)   }
+//                                             ` }
+//                                             onClick={() => {
+//                                                 //click to select or deselect the upgrade
+//                                                 if(upgrade === selectedInteriorExteriorUpgrade) {
+//                                                     setSelectedInteriorExteriorUpgrade(null)
+//                                                 } else {
+//                                                     setSelectedInteriorExteriorUpgrade(upgrade)
+//                                                 }
+                                                
+//                                                 }}
+//                                             >   
+//                                                 <span className="interiorexteriorupgrade-exterior">内外装向上</span>
+//                                                 {
+//                                                     upgrade.is_exterior ? (
+//                                                         <>
+//                                                         <img className="interiorexteriorupgrade-img" src={images[`${upgrade.imgurl}`] || images["no_image_option"]} alt={upgrade.Interior_exterior_upgrade} />
+//                                                         <p>{upgrade.Interior_exterior_upgrade}</p>
+//                                                         <p>{upgrade.name}</p>
+//                                                         <p>Price: {upgrade.price} JPY</p>
+//                                                         <p>{upgrade.is_exterior ? "内外装向上" : "快適･利便性向上"}</p>
+//                                                         </>
+                                                        
+//                                                     ) : (
+//                                                      <></>
+//                                                     )
+//                                                 }
+                                               
+//                                             </li>
+
+//                                             <li key={upgrade.id}
+//                                             // any row (entry) that has "all" in name field will always be shown  
+//                                             className={ `${selectedInteriorExteriorUpgrade?.id === upgrade.id ? "option-selected" : ""}
+//                                                         ${ (upgrade.name === "all") ? `show`: ((upgrade.name === selectedGrade?.name) ? `show` : `hide`)   }
+//                                             ` }
+//                                             onClick={() => {
+//                                                 //click to select or deselect the upgrade
+//                                                 if(upgrade === selectedInteriorExteriorUpgrade) {
+//                                                     setSelectedInteriorExteriorUpgrade(null)
+//                                                 } else {
+//                                                     setSelectedInteriorExteriorUpgrade(upgrade)
+//                                                 }
+                                                
+//                                                 }}
+//                                             >
+                                                
+//                                                 <img className="interiorexteriorupgrade-img" src={images[`${upgrade.imgurl}`] || images["no_image_option"]} alt={upgrade.Interior_exterior_upgrade} />
+//                                                 <p>{upgrade.Interior_exterior_upgrade}</p>
+//                                                 <p>{upgrade.name}</p>
+//                                                 <p>Price: {upgrade.price} JPY</p>
+//                                                 <p>{upgrade.is_exterior ? "内外装向上" : "快適･利便性向上"}</p>
+//                                             </li>
+//                                             </>
+                                            
+//                                         ))}
+//                                     </ul>
+//                                 ) : (
+//                                     <p>内外装向上オプションはありません。</p>
+//                                 )
+//                             }
+
+
+
+// const fetchPaylist = async () => {
+          
+    //       const cardataList: Paylist[] = []; // Assuming cars is an array of Car objects
+    
+    //       try {
+    
+    //           // in this case repeat fetch for 3 times 
+    //           for (let i = 1; i <= 3; i++) {
+    //             const res = await api.get(`/api/cars/${i}/`); 
+    //             const formattedList =  {
+    //               id: res.data.id, 
+    //               name: res.data.name, 
+    //               price: res.data.price,
+    //               grade: res.data.grade,
+    //               imgname: res.data.imgname,
+    //               paylist1: res.data.paylist1, 
+    //               paylist2: res.data.paylist2, 
+    //               paylist3: res.data.paylist3, 
+    //               paylist4: res.data.paylist4
+    //             };
+                
+    //             cardataList.push(formattedList);
+    //           }
+              
+      
+    //           setPaylist(cardataList);
+    
+    //           console.log('paylist state:', paylist);
+    
+    //       } catch (error) {
+    //           console.error('Error fetching cars:', error);
+    //       }
+    // };
+    
+// {
+//     "id": 2,
+//     "name": "ヤリス",
+//     "price": 3000000,
+//     "grade": "X GAS 1.0L 2WD",
+//     "imgname": "yaris",
+//     "grades": [
+//         {
+//             "id": 1,
+//             "grade": "X GAS 1.0L 2WD(5人)",
+//             "gasType": "ガソリン",
+//             "wheelDrive": "2WD",
+//             "name": "yaris",
+//             "car_id": 2,
+//             "price": 0
+//         },
+//         {
+//             "id": 2,
+//             "grade": "X GAS 1.5L 2WD(5人)",
+//             "gasType": "ガソリン",
+//             "wheelDrive": "2WD",
+//             "name": "yaris",
+//             "car_id": 2,
+//             "price": 5000
+//         }
+//        
+//     ],
+//     "colors": [
+//        {
+//     "id": 1,
+//     "color": "プラチナホワイトパールマイカ",
+//     "color_hex": "#ededf6",
+//     "subname": "特別価格",
+//     "name": "プラチナホワイトパールマイカ",
+//     "car_id": 2,
+//     "price": 0
+//  },
+//  {
+//     "id": 2,
+//     "color": "スーパーホワイトⅡ",
+//     "color_hex": "#ededf6",
+//     "subname": "標準色",
+//     "name": "スーパーホワイトⅡ",
+//     "car_id": 2,
+//     "price": 0
+//  }, ]
+// "interiors": [
+//         {
+//             "id": 1,
+//             "interior": "ブラック",
+//             "interiorcolor": "ブラック",
+//             "seat": "ファブリック･ブラック(フロントシート:ヘッドレスト一体型)",
+//             "imgname": "yaris_interior_ex",
+//             "name": "1",
+//             "car_id": 2,
+//             "price": 0
+//         }
+//     ],
+//     
+//     "option_packages": [
+//     {
+//         "id": 1,
+//         "optionpackage": "standard",
+//         "name": "フロアマット種類の選択",
+//         "title": "標準仕様",
+//         "subtitle": [
+//             "• フロアマット種類の選択"
+//         ],
+//         "listItems": [
+//             {
+//                 "item": "フロアマットなし",
+//                 "price": 0,
+//                 "url": ""
+//             },
+//             {
+//                 "item": "フロアマット(ベーシック)",
+//                 "price": 330,
+//                 "url": "floormat_basic"
+//             },
+//             {
+//                 "item": "フロアマット(デラックス)",
+//                 "price": 550,
+//                 "url": "floormat_deluxe"
+//             }
+//         ],
+//         "comment": "",
+//         "car_id": 2,
+//         "price": 0
+//     }
+// ]
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+// const getBookmarks = async () => { 
+    
+
+//         try{
+
+//              api
+//             .get("/api/bookmarks/")
+//             .then((res) => { 
+                
+                
+//                 const response = res.data;
+
+//                 const PlanTemp: Plan[] = response.map((bookmark: any) => ({
+//                     plan_id: bookmark.plan[0].plan_id,
+//                     contractYear: bookmark.plan[0].contractYear,
+//                     bonusPayment: bookmark.plan[0].bonusPayment
+//                 }));
+
+//                 const bookmarktemp: SavedBookMark[] = response.map((bookmark: any) => ({
+//                     id: bookmark.id,
+//                     author: bookmark.author,
+//                     carid: bookmark.carid,
+//                     color_id: bookmark.color_id,
+//                     contract_year: bookmark.contract_year,
+//                     created_at: bookmark.created_at,
+//                     grade_id: bookmark.grade_id,
+//                     imgname: bookmark.imgname,
+//                     interior_exterior_upgrade_id: bookmark.interior_exterior_upgrade_id,
+//                     interior_id: bookmark.interior_id,
+//                     numberplate_number: bookmark.numberplate_number,
+//                     option_package_id: bookmark.option_package_id,
+//                     option_package_listitems: bookmark.option_package_listitems,
+//                     plan: PlanTemp,
+//                     tire_upgrade_id: bookmark.tire_upgrade_id,
+//                     updated_at: bookmark.updated_at
+//                 }));
+
+//                 setBookmarks(bookmarktemp);
+
+//                 console.log("getbookmark response are " , res.data);
+//             })
+//             .catch((err) => { console.log(err); });
+
+
+
+
+//         }catch (error) {
+//             console.log("Error fetching bookmarks: ", error);
+//         }
+       
+//         // .then((res) => res.data )
+//         // .then((data) => setBookmarks(data))   
+//         // .catch((err) => alert(err));
+//     }
+
+//     const deleteBookmarks = async (id: string) => {
+//          api
+//         .get("/api/bookmarks/delete/${id}/")
+//         .then((res) => { 
+
+//             if(res.status === 204) {
+//                 alert("note deleted ")
+//             }
+//             else{
+//                 alert("Failed to delete a note ")
+//             }
+
+
+//          })
+//         .catch((err) => { console.log(err); });
+
+//         getBookmarks(); //refresh the bookmarks after deleting
+
+//     }
+
+
+
+// const getCarOptionDetail = async () => {
+
+//         // api
+//         // .get(`/api/cars/${carId}/options/`)
+//         // .then((res) => {setCarOptions(res.data); console.log(res.data) })
+//         // .catch((err) => { console.log(err); });
+
+//         if (!carId) return; // Guard clause to prevent API calls with undefined carId
+    
+//         try {
+
+           
+//             const response = await api.get(`/api/cars/${carId}/options/`);
+
+//             const gradelists: gradelist[] = response.data.grades.map((grade: any) => ({
+//                 id: grade.id,
+//                 grade: grade.grade,
+//                 gasType: grade.gasType,
+//                 wheelDrive: grade.wheelDrive,
+//                 name: grade.name,
+//                 car_id: grade.car_id,
+//                 price: grade.price
+//             }));
+
+//             const colorlists: colors[] = response.data.colors.map((color: any) => ({
+//                 id: color.id,
+//                 color: color.color,
+//                 color_hex: color.color_hex,
+//                 subname: color.subname,
+//                 name: color.name,
+//                 car_id: color.car_id,
+//                 price: color.price
+//             }));
+
+//             const interiorlists: interiors[] = response.data.interiors.map((interior: any) => ({
+//                 id: interior.id,
+//                 interior: interior.interior,
+//                 interiorcolor: interior.interiorcolor,
+//                 seat: interior.seat,
+//                 imgname: interior.imgname,
+//                 name: interior.name,
+//                 car_id: interior.car_id,
+//                 price: interior.price
+//             }));
+
+//             const optionPackages: option_packages[] = response.data.option_packages.map((option: any) => ({
+//                 id: option.id,
+//                 optionpackage: option.optionpackage,
+//                 name: option.name,
+//                 title: option.title,
+//                 subtitle: option.subtitle,  //  option.subtitle is an array and option_packages.subtitle is also an array
+//                 listItems: option.listItems.map((item: any) => ({
+//                     item: item.item,
+//                     price: item.price,
+//                     url: item.url
+//                 })),
+//                 comment: option.comment,
+//                 car_id: option.car_id,
+//                 price: option.price
+//             }));
+
+//             const interiorExteriorUpgrades: interiorExteriorUpgrade[] = response.data.interior_exterior_upgrades.map((upgrade: any) => ({
+//                 id: upgrade.id,
+//                 Interior_exterior_upgrade: upgrade.Interior_exterior_upgrade,
+//                 imgurl: upgrade.imgurl,
+//                 is_exterior: upgrade.is_exterior,
+//                 name: upgrade.name,
+//                 car_id: upgrade.car_id,
+//                 price: upgrade.price
+//             }));
+
+//             const tireUpgrades: tireUpgrade[] = response.data.tire_upgrades.map((tire: any) => ({
+//                 id: tire.id,
+//                 Tire_upgrade: tire.Tire_upgrade,
+//                 name: tire.name,
+//                 title: tire.title,
+//                 description: tire.description,
+//                 car_id: tire.car_id,
+//                 price: tire.price
+//             }));
+
+//             const numberPlates: numberPlate[] = response.data.numberplates.map((plate: any) => ({
+//                 id: plate.id,
+//                 title: plate.title,
+//                 imgurl: plate.imgurl,
+//                 numberplate: plate.numberplate,
+//                 car_id: plate.car_id,
+//                 price: plate.price
+//             }));
+
+           
+
+//             const carOptionTemp : CarOption = {
+//                 id: response.data.id,
+//                 name: response.data.name,
+//                 price: response.data.price,
+//                 imgname: response.data.imgname,
+//                 grades: gradelists,
+//                 colors: colorlists,
+//                 interiors: interiorlists,
+//                 option_packages: optionPackages,
+//                 interior_exterior_upgrades: interiorExteriorUpgrades,
+//                 tire_upgrades: tireUpgrades,
+//                 numberplates: numberPlates
+//             } 
+    
+//             setCarOptions(carOptionTemp); // This stores the entire object
+
+
+
+//             console.log("Car options loaded:", response.data, "caroptions", optionPackages     );
+//         } catch (err) {
+//             console.error("Error fetching car options:", err);
+//         }
+
+
+//     }
+
+
+
+
+
+        //     isOptionDetailClicked ? (
+        //     option.listItems.map((item, index) => (
+        //     <li key={index}
+
+        //     className={`${selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.id === item.id ? "option-selected" : ""} 
+        //                 `}
+        //     onClick={() => setSelectedOptionPackagelistid(item.id)}
+        //     >
+        //         {item.item} - Price: {item.price} JPY - {item.url}
+        //     </li>
+        //     ))
+        // ) : (
+        //     option.listItems.map((item, index) => (
+        //     <li key={index}
+
+        //     className={`${selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.id === item.id ? "option-selected" : ""} 
+        //                 ${isOptionDetailClicked ? (selectedOptionPackage?.listItems.find(item => item.id === selectedOptionPackagelistid)?.id === item.id ? "show" : "hide"): ""} `} 
+        //     onClick={() => setSelectedOptionPackagelistid(item.id)}
+        //     >
+        //         {item.item} - Price: {item.price} JPY - {item.url}
+        //     </li>
+        //     ))
+        // )

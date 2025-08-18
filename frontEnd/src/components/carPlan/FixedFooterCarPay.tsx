@@ -1,4 +1,3 @@
-import React from 'react';
 import '../../styles/carplan/FixedFooterCarPlay.css';
 
 interface FixedFooterCarPayProps {

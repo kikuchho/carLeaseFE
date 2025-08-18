@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { IoFilter } from "react-icons/io5";
 import { FaGasPump } from "react-icons/fa";
@@ -76,21 +76,8 @@ const toggleDriveType = (type: string) => {
 
 
 // Count how many grades match each filter type
-const gasolineCount = grades.filter(grade => grade.gasType === "ガソリン").length;
-const hybridCount = grades.filter(grade => grade.gasType === "ハイブリッド").length;
-const twoWDCount = grades.filter(grade => grade.wheelDrive === "2WD").length;
-const fourWDCount = grades.filter(grade => grade.wheelDrive === "4WD").length;
 
 // Helper for display text in filter button
-const getFilterDisplayText = () => {
-const engineText = selectedEngineTypes.join('・');
-const driveText = selectedDriveTypes.join('・');
-
-if (engineText && driveText) {
-    return `${engineText}, ${driveText}`;
-}
-return engineText || driveText;
-};
 
 
 return (

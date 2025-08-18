@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/FirstPoint.css'; 
 import mv_pc from '../assets/mv_pc.jpg'; 
 import logo from '../assets/logo.png'; 

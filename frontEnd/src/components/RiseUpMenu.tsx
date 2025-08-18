@@ -2,10 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CiBookmark } from "react-icons/ci";
 import "../styles/RiseUpMenu.css";
 import api from "../api";
-import { type SavedBookMark, type Plan , type CarOption, getCarOptionDetail} from "../pages/CarPlan";
+import { type SavedBookMark} from "../pages/CarPlan";
 import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
-import { getBookmark, getBookmarks } from "../apihelper/apihelper";
+import { getBookmarks } from "../apihelper/apihelper";
 import { images } from "../assets/images";
 
 // [
@@ -47,7 +47,7 @@ const RiseUpMenu = () => {
     const navigate = useNavigate();
     
     //------------state and logic for bookmarks----------------
-    const [content, setContent] = useState<string | null>(null);
+    // const [content, setContent] = useState<string | null>(null);
 
     const uniqueCarNames = getUniqueCarNames(bookmarks, carlists);
 
@@ -188,61 +188,6 @@ const RiseUpMenu = () => {
 
     
 
-    const oldgetBookmarks = async () => { 
-    
-        try{
-
-                api
-            .get("/api/bookmarks/")
-            .then((res) => { 
-                
-                
-                const response = res.data;
-
-                
-                const PlanTemp: Plan[] = response.map((bookmark: any) => ({
-                    plan_id: bookmark.plan[0].plan_id,
-                    contractYear: bookmark.plan[0].contractYear,
-                    bonusPayment: bookmark.plan[0].bonusPayment
-                }));
-
-                const bookmarktemp: SavedBookMark[] = response.map((bookmark: any) => ({
-                    id: bookmark.id,
-                    author: bookmark.author,
-                    carid: bookmark.carid,
-                    color_id: bookmark.color_id,
-                    contract_year: bookmark.contract_year,
-                    created_at: bookmark.created_at,
-                    grade_id: bookmark.grade_id,
-                    imgname: bookmark.imgname,
-                    interior_exterior_upgrade_id: bookmark.interior_exterior_upgrade_id,
-                    interior_id: bookmark.interior_id,
-                    numberplate_number: bookmark.numberplate_number,
-                    option_package_id: bookmark.option_package_id,
-                    option_package_listitems: bookmark.option_package_listitems,
-                    plan: PlanTemp,
-                    tire_upgrade_id: bookmark.tire_upgrade_id,
-                    updated_at: bookmark.updated_at
-                }));
-
-                console.log("bookmark response are " , res.data);
-
-                setBookmarks(bookmarktemp);
-            })
-            .catch((err) => { console.log(err); });
-
-
-
-
-        }catch (error) {
-            console.log("Error fetching bookmarks: ", error);
-        }
-        
-        // .then((res) => res.data )
-        // .then((data) => setBookmarks(data))   
-        // .catch((err) => alert(err));
-    }
-    
 
     const deleteBookmarks = async (id: number) => {
          api
@@ -596,3 +541,65 @@ const getUniqueCarNames = (bookmarks: SavedBookMark[] | null, carlists: carlist[
     //                             <p style={{fontWeight: "bold", fontSize: "16px", display: "flex", alignItems: "baseline"}}
     //                             >オプション価格: <div style={{fontSize: "29px", fontWeight: "bold", paddingLeft: "10px", paddingRight: "10px", paddingBottom: "20px"}}> {bookmark.totalprice} </div> 円 </p>
     //                         </div>
+
+
+
+
+
+
+    
+    // const oldgetBookmarks = async () => { 
+    
+    //     try{
+
+    //             api
+    //         .get("/api/bookmarks/")
+    //         .then((res) => { 
+                
+                
+    //             const response = res.data;
+
+                
+    //             const PlanTemp: Plan[] = response.map((bookmark: any) => ({
+    //                 plan_id: bookmark.plan[0].plan_id,
+    //                 contractYear: bookmark.plan[0].contractYear,
+    //                 bonusPayment: bookmark.plan[0].bonusPayment
+    //             }));
+
+    //             const bookmarktemp: SavedBookMark[] = response.map((bookmark: any) => ({
+    //                 id: bookmark.id,
+    //                 author: bookmark.author,
+    //                 carid: bookmark.carid,
+    //                 color_id: bookmark.color_id,
+    //                 contract_year: bookmark.contract_year,
+    //                 created_at: bookmark.created_at,
+    //                 grade_id: bookmark.grade_id,
+    //                 imgname: bookmark.imgname,
+    //                 interior_exterior_upgrade_id: bookmark.interior_exterior_upgrade_id,
+    //                 interior_id: bookmark.interior_id,
+    //                 numberplate_number: bookmark.numberplate_number,
+    //                 option_package_id: bookmark.option_package_id,
+    //                 option_package_listitems: bookmark.option_package_listitems,
+    //                 plan: PlanTemp,
+    //                 tire_upgrade_id: bookmark.tire_upgrade_id,
+    //                 updated_at: bookmark.updated_at
+    //             }));
+
+    //             console.log("bookmark response are " , res.data);
+
+    //             setBookmarks(bookmarktemp);
+    //         })
+    //         .catch((err) => { console.log(err); });
+
+
+
+
+    //     }catch (error) {
+    //         console.log("Error fetching bookmarks: ", error);
+    //     }
+        
+    //     // .then((res) => res.data )
+    //     // .then((data) => setBookmarks(data))   
+    //     // .catch((err) => alert(err));
+    // }
+    

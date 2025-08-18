@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../../styles/FixedFooter.css';
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import { FaCalculator } from "react-icons/fa";

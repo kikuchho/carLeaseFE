@@ -4,7 +4,6 @@ import '../../styles/stepone.css';
 import RegisterHeader from '../../components/RegisterHeader';
 import { GoLinkExternal } from "react-icons/go";
 import { RiExternalLinkFill } from "react-icons/ri";
-import { IoClose } from "react-icons/io5";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 

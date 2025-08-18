@@ -1,4 +1,4 @@
-import React, { lazy, use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -42,10 +42,9 @@ function CardSlider() {
 
     // State to track if it's the first change in currentSlideIndex
     const [firstchange, setFirstChange] = useState<boolean>(true);
-    const firstRef = React.useRef<boolean>(true);
 
     // State to track the target slide index for animations
-    const [isanimating, setIsAnimating] = useState<boolean>(false);
+    const [isanimating] = useState<boolean>(false);
 
    // Create a non-state variable to track animation without causing re-renders
     const animationRef = React.useRef<boolean>(false);
@@ -150,8 +149,6 @@ function CardSlider() {
     // const isCentered = isCurrentCentered || isanimating;
 
     const isCurrentCentered = currentSlideIndex === index;
-    const isAnimating = animationRef.current;
-    const nextslide = nextslideRef.current;
     
 
     return (

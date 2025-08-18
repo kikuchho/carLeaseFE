@@ -1,5 +1,4 @@
 import toyota_letters_logo from "../assets/toyota_letters_logo.png"
-import React from "react";
 import "../styles/RegisterHeader.css";
 
 const RegisterHeader = () => {

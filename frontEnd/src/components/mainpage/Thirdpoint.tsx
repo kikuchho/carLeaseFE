@@ -1,4 +1,3 @@
-import React from 'react';
 import '../../styles/ThirdPoint.css' ;
 import point3 from '../../assets/point03.png';
 import point4 from '../../assets/point04.png';

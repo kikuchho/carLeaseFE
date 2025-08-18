@@ -1,9 +1,5 @@
 import Toyota_logo from "../assets/Toyota-logo.png";
 
-import { CiSearch } from "react-icons/ci";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { CiBookmark } from "react-icons/ci";
-import { useState } from "react";
 import "../styles/Header.css";
 import Dropdown from "./Dropdown";
 import RiseUpMenu from "./RiseUpMenu";
@@ -12,7 +8,6 @@ import HeaderSearch from "./HeaderSearch";
 
 function Header({ isAuthorized }: { isAuthorized: boolean }) {
 
-    const [isClicked, setIsClicked] = useState(false);
     const navigate = useNavigate()
 
     function handlelogout() {

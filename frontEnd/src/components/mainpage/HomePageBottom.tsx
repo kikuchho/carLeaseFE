@@ -1,4 +1,3 @@
-import React from 'react';
 import '../../styles/HomePageBottom.css';
 import diagL from '../../assets/diagL.png';
 import diagR from '../../assets/diagR.png';

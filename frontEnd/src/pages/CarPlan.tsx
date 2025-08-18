@@ -7,7 +7,7 @@ import CarPlanHeader from "../components/carPlan/CarPlanHeader";
 import { images } from "../assets/images";
 import FixedFooterCarPay from "../components/carPlan/FixedFooterCarPay";
 import { FaCheck } from "react-icons/fa6";
-import GradeList from "../components/carPlan/gradelist";
+import GradeList from "../components/carPlan/GradeList";
 import FreeUpFrontFee from "../components/carPlan/FreeUpFrontFee";
 
 
@@ -167,8 +167,8 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
 
 
     const [imagePath, setImagePath] = useState<string>("");
-    const [optionpackageImagePath, setOptionPackageImagePath] = useState<string>("no_image_option");
-    const [content, setContent] = useState<string | null>(null);
+    //const [optionpackageImagePath, setOptionPackageImagePath] = useState<string>("no_image_option");
+    //const [content, setContent] = useState<string | null>(null);
     //bookmark contain a one bookmark object that is fetched from getCarOptionDetail, null if the user came from cardslider component 
     // should not be empty if the user came from RiseUpMenu component
     const [bookmark, setBookmark] = useState<SavedBookMark| null>(null);
@@ -455,7 +455,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                     bonusPayment: plan.bonusPayment || '0'
                 }));
 
-                const interiorExteriorUpgradeIds : number[] = [] ;
+               
 
                 console.log(response.interior_exterior_upgrade_ids + " !!!!!!!!!!!!is response.interior_exterior_upgrade_id");
 
@@ -499,25 +499,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         // .catch((err) => alert(err));
     }
 
-    const deleteBookmarks = async (id: string) => {
-         api
-        .get("/api/bookmarks/delete/${id}/")
-        .then((res) => { 
-
-            if(res.status === 204) {
-                alert("note deleted ")
-            }
-            else{
-                alert("Failed to delete a note ")
-            }
-
-
-         })
-        .catch((err) => { console.log(err); });
-
-        getBookmark(); //refresh the bookmarks after deleting
-
-    }
+   
 
     const createBookmark = async (e :any) => {
         e.preventDefault();
@@ -528,7 +510,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
         ]
 
         if( selectedInteriorExteriorUpgrade && selectedInteriorExteriorUpgrade.length > 0) {
-            let selectedInteriorExteriorUpgradeTemp : any = [];
+            //let selectedInteriorExteriorUpgradeTemp : any = [];
             console.log(selectedInteriorExteriorUpgrade + " is selectedInteriorExteriorUpgrade!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             for (let i = 0; i < selectedInteriorExteriorUpgrade.length; i++) {
                
@@ -989,7 +971,7 @@ const CarPlan = ({isAuthorized}: {isAuthorized: boolean}) => {
                             {
                                 carOptions.tire_upgrades.length > 0 ? (
                                     <div>
-                                        {carOptions.tire_upgrades.map((tire, index) => (
+                                        {carOptions.tire_upgrades.map((tire) => (
                                             
                                             <div key={tire.id}
                                                 className={"tireupgrade-item"}
@@ -1767,3 +1749,26 @@ export const getCarOptionDetail = async (carId: string | null): Promise<CarOptio
         //     </li>
         //     ))
         // )
+
+
+
+
+    //      const deleteBookmarks = async (id: string) => {
+    //      api
+    //     .get("/api/bookmarks/delete/${id}/")
+    //     .then((res) => { 
+
+    //         if(res.status === 204) {
+    //             alert("note deleted ")
+    //         }
+    //         else{
+    //             alert("Failed to delete a note ")
+    //         }
+
+
+    //      })
+    //     .catch((err) => { console.log(err); });
+
+    //     getBookmark(); //refresh the bookmarks after deleting
+
+    // }

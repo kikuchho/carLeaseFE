@@ -14,11 +14,8 @@ const Stepone = () => {
     //state management 
     const password = usePasswordStore(state => state.password);
     const setPassword = usePasswordStore(state => state.setPassword);
-    const removePassword = usePasswordStore(state => state.removePassword);
 
     const userName = useUsernameStore(state => state.username);
-    const setuserName = useUsernameStore(state => state.setUsername);
-    const removeuserName = useUsernameStore(state => state.removeUsername);
 
     // Customer info store state and actions
     const {

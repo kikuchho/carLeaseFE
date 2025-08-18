@@ -1,12 +1,8 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import { BrowserRouter, Routes, Route, Navigate  } from 'react-router-dom'
 import Login from './pages/Login'
-import Register from './pages/Register'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
-import UnprotectedHome from './pages/unProtectedHome'
+import UnprotectedHome from './pages/UnprotectedHome'
 import ProtectedRoute from './components/ProtectedRoutes'
 import Stepone from './pages/register/Stepone'
 import Steptwo from './pages/register/Steptwo'
@@ -15,7 +11,7 @@ import Stepfour from './pages/register/Stepfour'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CarPlan from './pages/CarPlan'
 import CarPlanLoggedOut from './pages/CarPlanLoggedOut'
-import Stepfive from './pages/register/stepfive'
+import Stepfive from './pages/register/Stepfive'
 
 
 function Logout() {
